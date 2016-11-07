@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   idx_t objval;
   idx_t *epart = new idx_t[numElements];
   idx_t *npart = new idx_t[numVertices];
-  idx_t nparts = argv[2];
+  idx_t nparts = atoi(argv[2]);
   idx_t options[METIS_NOPTIONS];
   METIS_SetDefaultOptions(options); 
 
