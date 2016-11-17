@@ -126,7 +126,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
       for(unsigned int j = 0; j < e->lines[i]->getNumVertices(); j++)
       {
-	elementsNodesMap[tag].push_back(e->lines[i]->getVertex(j)->getNum()-1);
+          elementsNodesMap[tag].push_back(e->lines[i]->getVertex(j)->getNum()-1);
       }
     }
   }
@@ -143,7 +143,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
       //Points
       for(unsigned int j = 0; j < v->points[i]->getNumVertices(); j++)
       {
-	elementsNodesMap[tag].push_back(v->points[i]->getVertex(j)->getNum()-1);
+          elementsNodesMap[tag].push_back(v->points[i]->getVertex(j)->getNum()-1);
       }
     }
   }

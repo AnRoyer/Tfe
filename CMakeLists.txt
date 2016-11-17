@@ -21,4 +21,4 @@ endif(APPLE)
 add_executable(graphPartitioner ${FILES})
 
 
-target_link_libraries(graphPartitioner Gmsh blas metis)
+target_link_libraries(graphPartitioner Gmsh lapack blas metis)
