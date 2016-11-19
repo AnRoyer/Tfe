@@ -13,9 +13,33 @@
 
 int main(int argc, char **argv)
 {
+    if(argc < 2)
+    {
+        return 0;
+    }
+    
+    std::cout << "*****************************************************************************" << std::endl;
+    std::cout << "*                                                                           *" << std::endl;
+    std::cout << "*                         *   *  *****   ****  *   *                        *" << std::endl;
+    std::cout << "*                         ** **  *      *      *   *                        *" << std::endl;
+    std::cout << "*                         * * *  ****   *****  *****                        *" << std::endl;
+    std::cout << "*                         *   *  *          *  *   *                        *" << std::endl;
+    std::cout << "*                         *   *  *****  ****   *   *                        *" << std::endl;
+    std::cout << "*                                                                           *" << std::endl;
+    std::cout << "*                                                                           *" << std::endl;
+    std::cout << "*  ****    ***   *****  *****  ***  *****  ***   ***   *   *  *****  *****  *" << std::endl;
+    std::cout << "*  *   *  *   *  *   *    *     *     *     *   *   *  **  *  *      *   *  *" << std::endl;
+    std::cout << "*  ****   *****  *****    *     *     *     *   *   *  * * *  ****   *****  *" << std::endl;
+    std::cout << "*  *      *   *  * **     *     *     *     *   *   *  * * *  *      * **   *" << std::endl;
+    std::cout << "*  *      *   *  *   *    *    ***    *    ***   ***   *  **  *****  *   *  *" << std::endl;
+    std::cout << "*                                                                           *" << std::endl;
+    std::cout << "*****************************************************************************" << std::endl << std::endl;
+    
     GmshInitialize(argc, argv);
     GModel *m = new GModel();
+    std::cout << "Reading msh file... " << std::flush;
     m->readMSH(argv[1]);
+    std::cout << "Done!" << std::endl;
 
     const int numElements = m->getNumMeshElements();
     const int numVertices = m->getNumMeshVertices();
@@ -24,11 +48,11 @@ int main(int argc, char **argv)
     int* eind = NULL;
     int *metisToGmshIndex = new int[numElements];
 
-    std::cout << "\nCreating Metis structure... ";
+    std::cout << "Creating Metis structure... " << std::flush;
     GModelToGraph(m, eptr, &eind, metisToGmshIndex);
     std::cout << "Done!" << std::endl;
   
-    std::cout << "Mesh partitioning... ";
+    std::cout << "Mesh partitioning... " << std::flush;
   
     idx_t objval;
     idx_t *epart = new idx_t[numElements];
@@ -67,7 +91,7 @@ int main(int argc, char **argv)
         m->getMeshElementByTag(metisToGmshIndex[i])->setPartition(epart[i]+1); //epart has the first partition at zero and we want to start with one
     }
     
-    std::cout << "Creating new GModel...";
+    std::cout << "Creating new GModel..." << std::flush;
     std::vector<GModel*> models = createNewModels(m, nparts);
     std::cout << "Done!" << std::endl;
     
@@ -75,14 +99,14 @@ int main(int argc, char **argv)
     createPartitionBoundaries(m, false);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign mesh vertex to models...";
+    std::cout << "Assign mesh vertex to models..." << std::flush;
     for (unsigned int i = 0; i < nparts; i++)
     {
         assignMeshVerticesToModel(models[i]);
     }
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign partition boundary to models...";
+    std::cout << "Assign partition boundary to models..." << std::flush;
     assignPartitionBoundariesToModels(m, models);
     std::cout << "Done!" << std::endl;
     
@@ -97,11 +121,13 @@ int main(int argc, char **argv)
     std::cout << "Partition meshes writed." << std::endl;
     
     m->writeMSH("output.msh");
-    std::cout << "Global meshes writed." << std::endl;
+    std::cout << "Global mesh writed." << std::endl;
   
     freeModels(&models);
     delete[] eptr;
     delete[] eind;
     delete m;
     GmshFinalize();
+    
+    return 1;
 }

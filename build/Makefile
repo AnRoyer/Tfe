@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named graphPartitioner
+# Target rules for targets named meshPartitioner
 
 # Build rule for target.
-graphPartitioner: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 graphPartitioner
-.PHONY : graphPartitioner
+meshPartitioner: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 meshPartitioner
+.PHONY : meshPartitioner
 
 # fast build rule for target.
-graphPartitioner/fast:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/build
-.PHONY : graphPartitioner/fast
+meshPartitioner/fast:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/build
+.PHONY : meshPartitioner/fast
 
 graph.o: graph.cpp.o
 
@@ -129,7 +129,7 @@ graph.o: graph.cpp.o
 
 # target to build an object file
 graph.cpp.o:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/graph.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.o
 .PHONY : graph.cpp.o
 
 graph.i: graph.cpp.i
@@ -138,7 +138,7 @@ graph.i: graph.cpp.i
 
 # target to preprocess a source file
 graph.cpp.i:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/graph.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.i
 .PHONY : graph.cpp.i
 
 graph.s: graph.cpp.s
@@ -147,7 +147,7 @@ graph.s: graph.cpp.s
 
 # target to generate assembly for a file
 graph.cpp.s:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/graph.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.s
 .PHONY : graph.cpp.s
 
 main.o: main.cpp.o
@@ -156,7 +156,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -165,7 +165,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -174,7 +174,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 topology.o: topology.cpp.o
@@ -183,7 +183,7 @@ topology.o: topology.cpp.o
 
 # target to build an object file
 topology.cpp.o:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/topology.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.o
 .PHONY : topology.cpp.o
 
 topology.i: topology.cpp.i
@@ -192,7 +192,7 @@ topology.i: topology.cpp.i
 
 # target to preprocess a source file
 topology.cpp.i:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/topology.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.i
 .PHONY : topology.cpp.i
 
 topology.s: topology.cpp.s
@@ -201,7 +201,7 @@ topology.s: topology.cpp.s
 
 # target to generate assembly for a file
 topology.cpp.s:
-	$(MAKE) -f CMakeFiles/graphPartitioner.dir/build.make CMakeFiles/graphPartitioner.dir/topology.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.s
 .PHONY : topology.cpp.s
 
 # Help Target
@@ -212,7 +212,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... graphPartitioner"
+	@echo "... meshPartitioner"
 	@echo "... graph.o"
 	@echo "... graph.i"
 	@echo "... graph.s"

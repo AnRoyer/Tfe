@@ -18,7 +18,7 @@ else(APPLE)
 endif(APPLE)
 
 
-add_executable(graphPartitioner ${FILES})
+add_executable(meshPartitioner ${FILES})
 
 
-target_link_libraries(graphPartitioner Gmsh lapack blas metis)
+target_link_libraries(meshPartitioner Gmsh lapack blas metis)

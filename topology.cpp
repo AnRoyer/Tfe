@@ -1,7 +1,7 @@
 #include <iostream>
 #include <set>
 #include <map>
-#include <algorithm>
+#include <string>
 
 #include "MElement.h"
 
@@ -43,7 +43,7 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
     std::multimap<MVertex*, MElement*> vertexToElement;
     
     //Create partition faces
-    std::cout << "\tCreate partition faces... ";
+    std::cout << "\tCreate partition faces... " << std::flush;
     if (meshDim == 3)
     {
         for(GModel::riter it = model->firstRegion(); it != model->lastRegion(); ++it)
@@ -80,7 +80,7 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
     std::cout << "Done!" << std::endl;
     
     //Create partition edges
-    std::cout << "\tCreate partition edges... ";
+    std::cout << "\tCreate partition edges... " << std::flush;
     if (meshDim > 1)
     {
         if (meshDim == 2)
@@ -130,7 +130,7 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
     std::cout << "Done!" << std::endl;
     
     //Create partition vertices
-    std::cout << "\tCreate partition vertices... ";
+    std::cout << "\tCreate partition vertices... "  << std::flush;
     if (meshDim > 1)
     {
         if (meshDim == 2)
@@ -440,57 +440,73 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 modelsHaveRegion[partition] = dr;
+                addPhysical(newModels[partition], dr, gModel, r, partition+1);
             }
             
             modelsHaveRegion[r->tetrahedra[i]->getPartition()-1]->tetrahedra.push_back(r->tetrahedra[i]);
         }
         
-        //To finish!
-        /*
+
         //Hexahedra
         for(unsigned int i = 0; i < r->hexahedra.size(); i++)
         {
-            const int tag = r->hexahedra[i]->getNum()-1;
-            
-            for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
+            const int partition = r->hexahedra[i]->getPartition()-1;
+            if(!modelsHaveRegion[partition])
             {
-                elementsNodesMap[tag].push_back(r->hexahedra[i]->getVertex(j)->getNum()-1);
+                discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
+                newModels[partition]->add(dr);
+                modelsHaveRegion[partition] = dr;
+                addPhysical(newModels[partition], dr, gModel, r, partition+1);
             }
+            
+            modelsHaveRegion[r->hexahedra[i]->getPartition()-1]->hexahedra.push_back(r->hexahedra[i]);
         }
         
         //Prisms
         for(unsigned int i = 0; i < r->prisms.size(); i++)
         {
-            const int tag = r->prisms[i]->getNum()-1;
-            
-            for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
+            const int partition = r->prisms[i]->getPartition()-1;
+            if(!modelsHaveRegion[partition])
             {
-                elementsNodesMap[tag].push_back(r->prisms[i]->getVertex(j)->getNum()-1);
+                discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
+                newModels[partition]->add(dr);
+                modelsHaveRegion[partition] = dr;
+                addPhysical(newModels[partition], dr, gModel, r, partition+1);
             }
+            
+            modelsHaveRegion[r->prisms[i]->getPartition()-1]->prisms.push_back(r->prisms[i]);
         }
         
         //Pyramids
         for(unsigned int i = 0; i < r->pyramids.size(); i++)
         {
-            const int tag = r->pyramids[i]->getNum()-1;
-            
-            for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
+            const int partition = r->pyramids[i]->getPartition()-1;
+            if(!modelsHaveRegion[partition])
             {
-                elementsNodesMap[tag].push_back(r->pyramids[i]->getVertex(j)->getNum()-1);
+                discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
+                newModels[partition]->add(dr);
+                modelsHaveRegion[partition] = dr;
+                addPhysical(newModels[partition], dr, gModel, r, partition+1);
             }
+            
+            modelsHaveRegion[r->pyramids[i]->getPartition()-1]->pyramids.push_back(r->pyramids[i]);
         }
         
         //Trihedra
         for(unsigned int i = 0; i < r->trihedra.size(); i++)
         {
-            const int tag = r->trihedra[i]->getNum()-1;
-            
-            for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
+            const int partition = r->trihedra[i]->getPartition()-1;
+            if(!modelsHaveRegion[partition])
             {
-                elementsNodesMap[tag].push_back(r->trihedra[i]->getVertex(j)->getNum()-1);
+                discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
+                newModels[partition]->add(dr);
+                modelsHaveRegion[partition] = dr;
+                addPhysical(newModels[partition], dr, gModel, r, partition+1);
             }
+            
+            modelsHaveRegion[r->trihedra[i]->getPartition()-1]->trihedra.push_back(r->trihedra[i]);
         }
-        */
+        
         //Polyhedra ????????
     }
     
@@ -510,24 +526,28 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
                 modelsHaveFace[partition] = df;
+                addPhysical(newModels[partition], df, gModel, f, partition+1);
             }
             
             modelsHaveFace[f->triangles[i]->getPartition()-1]->triangles.push_back(f->triangles[i]);
         }
-        /*
+        
         //Quadrangles
         for(unsigned int i = 0; i < f->quadrangles.size(); i++)
         {
-            const int tag = f->quadrangles[i]->getNum()-1;
-            
-            for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
+            const int partition = f->quadrangles[i]->getPartition()-1;
+            if(!modelsHaveFace[partition])
             {
-                elementsNodesMap[tag].push_back(f->quadrangles[i]->getVertex(j)->getNum()-1);
+                discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
+                newModels[partition]->add(df);
+                modelsHaveFace[partition] = df;
+                addPhysical(newModels[partition], df, gModel, f, partition+1);
             }
+            
+            modelsHaveFace[f->quadrangles[i]->getPartition()-1]->quadrangles.push_back(f->quadrangles[i]);
         }
         
         //Polygons ????????
-         */
     }
     
     //Loop over edges
@@ -546,6 +566,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteEdge *de = new discreteEdge(newModels[partition], newModels[partition]->getNumEdges()+1, nullptr, nullptr);
                 newModels[partition]->add(de);
                 modelsHaveEdge[partition] = de;
+                addPhysical(newModels[partition], de, gModel, e, partition+1);
             }
             
             modelsHaveEdge[e->lines[i]->getPartition()-1]->lines.push_back(e->lines[i]);
@@ -567,6 +588,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteVertex *dv = new discreteVertex(newModels[partition], newModels[partition]->getNumVertices()+1);
                 newModels[partition]->add(dv);
                 modelsHaveVertex[partition] = dv;
+                addPhysical(newModels[partition], dv, gModel, v, partition+1);
             }
             
             modelsHaveVertex[v->points[i]->getPartition()-1]->points.push_back(v->points[i]);
@@ -604,52 +626,82 @@ void assignMeshVerticesToModel(GModel *gModel)
             }
         }
         
-        //To finish!
-        /*
-         //Hexahedra
-         for(unsigned int i = 0; i < r->hexahedra.size(); i++)
-         {
-         const int tag = r->hexahedra[i]->getNum()-1;
+        //Hexahedra
+        for(unsigned int i = 0; i < r->hexahedra.size(); i++)
+        {
+            for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
+            {
+                if(vertexToEntity.count(r->hexahedra[i]->getVertex(j)) > 0)
+                {
+                    if(vertexToEntity[r->hexahedra[i]->getVertex(j)]->dim() > r->dim())
+                    {
+                        vertexToEntity[r->hexahedra[i]->getVertex(j)] = r;
+                    }
+                }
+                else
+                {
+                    vertexToEntity[r->hexahedra[i]->getVertex(j)] = r;
+                }
+            }
+        }
          
-         for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
-         {
-         elementsNodesMap[tag].push_back(r->hexahedra[i]->getVertex(j)->getNum()-1);
-         }
-         }
+        //Prisms
+        for(unsigned int i = 0; i < r->prisms.size(); i++)
+        {
+            for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
+            {
+                if(vertexToEntity.count(r->prisms[i]->getVertex(j)) > 0)
+                {
+                    if(vertexToEntity[r->prisms[i]->getVertex(j)]->dim() > r->dim())
+                    {
+                        vertexToEntity[r->prisms[i]->getVertex(j)] = r;
+                    }
+                }
+                else
+                {
+                    vertexToEntity[r->prisms[i]->getVertex(j)] = r;
+                }
+            }
+        }
          
-         //Prisms
-         for(unsigned int i = 0; i < r->prisms.size(); i++)
-         {
-         const int tag = r->prisms[i]->getNum()-1;
+        //Pyramids
+        for(unsigned int i = 0; i < r->pyramids.size(); i++)
+        {
+            for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
+            {
+                if(vertexToEntity.count(r->pyramids[i]->getVertex(j)) > 0)
+                {
+                    if(vertexToEntity[r->pyramids[i]->getVertex(j)]->dim() > r->dim())
+                    {
+                        vertexToEntity[r->pyramids[i]->getVertex(j)] = r;
+                    }
+                }
+                else
+                {
+                    vertexToEntity[r->pyramids[i]->getVertex(j)] = r;
+                }
+            }
+        }
          
-         for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
-         {
-         elementsNodesMap[tag].push_back(r->prisms[i]->getVertex(j)->getNum()-1);
-         }
-         }
-         
-         //Pyramids
-         for(unsigned int i = 0; i < r->pyramids.size(); i++)
-         {
-         const int tag = r->pyramids[i]->getNum()-1;
-         
-         for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
-         {
-         elementsNodesMap[tag].push_back(r->pyramids[i]->getVertex(j)->getNum()-1);
-         }
-         }
-         
-         //Trihedra
-         for(unsigned int i = 0; i < r->trihedra.size(); i++)
-         {
-         const int tag = r->trihedra[i]->getNum()-1;
-         
-         for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
-         {
-         elementsNodesMap[tag].push_back(r->trihedra[i]->getVertex(j)->getNum()-1);
-         }
-         }
-         */
+        //Trihedra
+        for(unsigned int i = 0; i < r->trihedra.size(); i++)
+        {
+            for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
+            {
+                if(vertexToEntity.count(r->trihedra[i]->getVertex(j)) > 0)
+                {
+                    if(vertexToEntity[r->trihedra[i]->getVertex(j)]->dim() > r->dim())
+                    {
+                        vertexToEntity[r->trihedra[i]->getVertex(j)] = r;
+                    }
+                }
+                else
+                {
+                    vertexToEntity[r->trihedra[i]->getVertex(j)] = r;
+                }
+            }
+        }
+        
         //Polyhedra ????????
     }
     
@@ -676,20 +728,27 @@ void assignMeshVerticesToModel(GModel *gModel)
                 }
             }
         }
-        /*
-         //Quadrangles
-         for(unsigned int i = 0; i < f->quadrangles.size(); i++)
-         {
-         const int tag = f->quadrangles[i]->getNum()-1;
+    
+        //Quadrangles
+        for(unsigned int i = 0; i < f->quadrangles.size(); i++)
+        {
+            for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
+            {
+                if(vertexToEntity.count(f->quadrangles[i]->getVertex(j)) > 0)
+                {
+                    if(vertexToEntity[f->quadrangles[i]->getVertex(j)]->dim() > f->dim())
+                    {
+                        vertexToEntity[f->quadrangles[i]->getVertex(j)] = f;
+                    }
+                }
+                else
+                {
+                    vertexToEntity[f->quadrangles[i]->getVertex(j)] = f;
+                }
+            }
+        }
          
-         for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
-         {
-         elementsNodesMap[tag].push_back(f->quadrangles[i]->getVertex(j)->getNum()-1);
-         }
-         }
-         
-         //Polygons ????????
-         */
+        //Polygons ????????
     }
     
     //Loop over edges
@@ -750,6 +809,8 @@ void assignMeshVerticesToModel(GModel *gModel)
 
 void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models)
 {
+    int maxNumPhysical = gModel->numPhysicalNames();
+    
     //Loop over faces
     for(GModel::fiter it = gModel->firstFace(); it != gModel->lastFace(); ++it)
     {
@@ -757,9 +818,19 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
         
         if(f->geomType() == GEntity::PartitionSurface)
         {
+            maxNumPhysical++;
+            f->addPhysicalEntity(maxNumPhysical);
+            
+            std::string name = "_sigma";
+            for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
+            {
+                name += std::to_string(static_cast<partitionFace*>(f)->_partitions[j]);
+            }
+            
             for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
             {
                 models[static_cast<partitionFace*>(f)->_partitions[j]-1]->add(f);
+                models[static_cast<partitionFace*>(f)->_partitions[j]-1]->setPhysicalName(name, f->dim(), maxNumPhysical);
             }
         }
     }
@@ -771,9 +842,19 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
         
         if(e->geomType() == GEntity::PartitionCurve)
         {
+            maxNumPhysical++;
+            e->addPhysicalEntity(maxNumPhysical);
+            
+            std::string name = "_sigma";
+            for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
+            {
+                name += std::to_string(static_cast<partitionEdge*>(e)->_partitions[j]);
+            }
+            
             for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
             {
                 models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->add(e);
+                models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->setPhysicalName(name, e->dim(), maxNumPhysical);
             }
         }
     }
@@ -785,9 +866,19 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
         
         if(v->geomType() == GEntity::PartitionVertex)
         {
+            maxNumPhysical++;
+            v->addPhysicalEntity(maxNumPhysical);
+            
+            std::string name = "_sigma";
+            for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
+            {
+                name += std::to_string(static_cast<partitionVertex*>(v)->_partitions[j]);
+            }
+            
             for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
             {
                 models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->add(v);
+                models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->setPhysicalName(name, v->dim(), maxNumPhysical);
             }
         }
     }
@@ -824,6 +915,34 @@ void freeModels(std::vector<GModel*> *models)
         }
     }
 }
+
+void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition)
+{
+    std::vector<int> oldPhysical = oldEntity->getPhysicalEntities();
+    
+    if(oldPhysical.size() == 0)
+    {
+        std::string name = "_omega";
+        name += std::to_string(partition);
+        
+        const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
+        newEntity->addPhysicalEntity(number);
+        
+        return;
+    }
+    
+    for(unsigned int i = 0; i < oldPhysical.size(); i++)
+    {
+        std::string name = oldModel->getPhysicalName(oldEntity->dim(), oldPhysical[i]);
+        name += "_omega";
+        name += std::to_string(partition);
+            
+        const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
+        newEntity->addPhysicalEntity(number);
+    }
+}
+
+
 
 
 

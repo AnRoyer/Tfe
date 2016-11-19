@@ -24,5 +24,6 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts);
 void assignMeshVerticesToModel(GModel *gModel);
 void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models);
 void freeModels(std::vector<GModel*> *models);
+void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition);
 
 #endif //TOPOLOGY_INCLUDED
