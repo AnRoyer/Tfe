@@ -204,10 +204,10 @@ void fillit_(std::multimap<MFace, MElement*, Less_Face> &faceToElement, ITERATOR
     for (ITERATOR IT = it_beg; IT != it_end ; ++IT)
     {
         MElement *el = *IT;
-        for(int j = 0; j < el->getNumFaces(); j++)
+        for(unsigned int j = 0; j < el->getNumFaces(); j++)
         {
-            MFace e = el->getFace(j);
-            faceToElement.insert(std::make_pair(e, el));
+            const MFace e = el->getFace(j);
+            faceToElement.insert(std::pair<MFace, MElement*>(e, el));
         }
     }
 }
@@ -218,10 +218,10 @@ void fillit_(std::multimap<MEdge, MElement*, Less_Edge> &edgeToElement, ITERATOR
     for (ITERATOR IT = it_beg; IT != it_end; ++IT)
     {
         MElement *el = *IT;
-        for(int j = 0; j < el->getNumEdges(); j++)
+        for(unsigned int j = 0; j < el->getNumEdges(); j++)
         {
-            MEdge e = el->getEdge(j);
-            edgeToElement.insert(std::make_pair(e, el));
+            const MEdge e = el->getEdge(j);
+            edgeToElement.insert(std::pair<MEdge, MElement*>(e, el));
         }
     }
 }
@@ -232,10 +232,10 @@ void fillit_(std::multimap<MVertex*, MElement*> &vertexToElement, ITERATOR it_be
     for (ITERATOR IT = it_beg; IT != it_end ; ++IT)
     {
         MElement *el = *IT;
-        for(int j = 0; j < el->getNumVertices(); j++)
+        for(unsigned int j = 0; j < el->getNumVertices(); j++)
         {
             MVertex* e = el->getVertex(j);
-            vertexToElement.insert(std::make_pair(e, el));
+            vertexToElement.insert(std::pair<MVertex*, MElement*>(e, el));
         }
     }
 }
@@ -821,11 +821,16 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             maxNumPhysical++;
             f->addPhysicalEntity(maxNumPhysical);
             
-            std::string name = "_sigma";
+            std::string name = "_sigma{";
             for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
             {
+                if(j > 0)
+                {
+                    name += ",";
+                }
                 name += std::to_string(static_cast<partitionFace*>(f)->_partitions[j]);
             }
+            name += "}";
             
             for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
             {
@@ -845,11 +850,16 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             maxNumPhysical++;
             e->addPhysicalEntity(maxNumPhysical);
             
-            std::string name = "_sigma";
+            std::string name = "_sigma{";
             for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
             {
+                if(j > 0)
+                {
+                    name += ",";
+                }
                 name += std::to_string(static_cast<partitionEdge*>(e)->_partitions[j]);
             }
+            name += "}";
             
             for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
             {
@@ -869,11 +879,16 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             maxNumPhysical++;
             v->addPhysicalEntity(maxNumPhysical);
             
-            std::string name = "_sigma";
+            std::string name = "_sigma{";
             for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
             {
+                if(j > 0)
+                {
+                    name += ",";
+                }
                 name += std::to_string(static_cast<partitionVertex*>(v)->_partitions[j]);
             }
+            name += "}";
             
             for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
             {
@@ -920,22 +935,16 @@ void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity
 {
     std::vector<int> oldPhysical = oldEntity->getPhysicalEntities();
     
-    if(oldPhysical.size() == 0)
-    {
-        std::string name = "_omega";
-        name += std::to_string(partition);
+    std::string name = "_omega{";
+    name += std::to_string(partition);
+    name += "}";
         
-        const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
-        newEntity->addPhysicalEntity(number);
-        
-        return;
-    }
+    const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
+    newEntity->addPhysicalEntity(number);
     
     for(unsigned int i = 0; i < oldPhysical.size(); i++)
     {
-        std::string name = oldModel->getPhysicalName(oldEntity->dim(), oldPhysical[i]);
-        name += "_omega";
-        name += std::to_string(partition);
+        name = oldModel->getPhysicalName(oldEntity->dim(), oldPhysical[i]);
             
         const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
         newEntity->addPhysicalEntity(number);

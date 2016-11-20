@@ -19,7 +19,7 @@
 
 void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 {
-    std::map<int, std::vector<int> > elementsNodesMap;
+    std::multimap<int, int> elementsNodesMap;
 
     //Loop over regions
     for(GModel::riter it = gModel->firstRegion(); it != gModel->lastRegion(); ++it)
@@ -33,7 +33,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < r->tetrahedra[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(r->tetrahedra[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,r->tetrahedra[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -44,7 +44,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(r->hexahedra[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,r->hexahedra[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -55,7 +55,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(r->prisms[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,r->prisms[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -66,7 +66,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(r->pyramids[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,r->pyramids[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -77,7 +77,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(r->trihedra[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,r->trihedra[i]->getVertex(j)->getNum()-1));
             }
         }
     
@@ -96,7 +96,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < f->triangles[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(f->triangles[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,f->triangles[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -107,7 +107,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(f->quadrangles[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,f->quadrangles[i]->getVertex(j)->getNum()-1));
             }
         }
 
@@ -126,7 +126,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 
             for(unsigned int j = 0; j < e->lines[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(e->lines[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,e->lines[i]->getVertex(j)->getNum()-1));
             }
         }
     }
@@ -143,7 +143,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
             //Points
             for(unsigned int j = 0; j < v->points[i]->getNumVertices(); j++)
             {
-                elementsNodesMap[tag].push_back(v->points[i]->getVertex(j)->getNum()-1);
+                elementsNodesMap.insert(std::pair<int, int>(tag,v->points[i]->getVertex(j)->getNum()-1));
             }
         }
     }
@@ -152,23 +152,26 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     int position = 0;
     eptr[0] = 0;
     int i = 0;
-    for(std::map<int, std::vector<int> >::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
+    int itFirstLast = 0;
+    
+    for(std::multimap<int, int>::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
     {
-        metisToGmshIndex[i] = it->first + 1;
-        position += it->second.size();
-        eptr[i+1] = position;
-        i++;
+        if(itFirstLast != it->first+1)
+        {
+            metisToGmshIndex[i] = it->first + 1;
+            position += elementsNodesMap.count(it->first);
+            eptr[i+1] = position;
+            i++;
+            itFirstLast = it->first+1;
+        }
     }
 
     int *eindTemp = new int[position];
     int positionInd = 0;
-    for(std::map<int, std::vector<int> >::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
+    for(std::multimap<int, int>::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
     {
-        for(unsigned int j = 0; j < it->second.size(); j++)
-        {
-            eindTemp[positionInd] = it->second.at(j);
-            positionInd++;
-        }
+        eindTemp[positionInd] = it->second;
+        positionInd++;
     }
     *eind = eindTemp;
 }

@@ -10,6 +10,7 @@
 
 #include "graph.h"
 #include "topology.h"
+#include "io.h"
 
 int main(int argc, char **argv)
 {
@@ -18,22 +19,22 @@ int main(int argc, char **argv)
         return 0;
     }
     
-    std::cout << "*****************************************************************************" << std::endl;
-    std::cout << "*                                                                           *" << std::endl;
-    std::cout << "*                         *   *  *****   ****  *   *                        *" << std::endl;
-    std::cout << "*                         ** **  *      *      *   *                        *" << std::endl;
-    std::cout << "*                         * * *  ****   *****  *****                        *" << std::endl;
-    std::cout << "*                         *   *  *          *  *   *                        *" << std::endl;
-    std::cout << "*                         *   *  *****  ****   *   *                        *" << std::endl;
-    std::cout << "*                                                                           *" << std::endl;
-    std::cout << "*                                                                           *" << std::endl;
-    std::cout << "*  ****    ***   *****  *****  ***  *****  ***   ***   *   *  *****  *****  *" << std::endl;
-    std::cout << "*  *   *  *   *  *   *    *     *     *     *   *   *  **  *  *      *   *  *" << std::endl;
-    std::cout << "*  ****   *****  *****    *     *     *     *   *   *  * * *  ****   *****  *" << std::endl;
-    std::cout << "*  *      *   *  * **     *     *     *     *   *   *  * * *  *      * **   *" << std::endl;
-    std::cout << "*  *      *   *  *   *    *    ***    *    ***   ***   *  **  *****  *   *  *" << std::endl;
-    std::cout << "*                                                                           *" << std::endl;
-    std::cout << "*****************************************************************************" << std::endl << std::endl;
+    std::cout << "#############################################################################" << std::endl;
+    std::cout << "#                                                                           #" << std::endl;
+    std::cout << "#                         #   #  #####   ####  #   #                        #" << std::endl;
+    std::cout << "#                         ## ##  #      #      #   #                        #" << std::endl;
+    std::cout << "#                         # # #  ####   #####  #####                        #" << std::endl;
+    std::cout << "#                         #   #  #          #  #   #                        #" << std::endl;
+    std::cout << "#                         #   #  #####  ####   #   #                        #" << std::endl;
+    std::cout << "#                                                                           #" << std::endl;
+    std::cout << "#                                                                           #" << std::endl;
+    std::cout << "#  ####    ###   #####  #####  ###  #####  ###   ###   #   #  #####  #####  #" << std::endl;
+    std::cout << "#  #   #  #   #  #   #    #     #     #     #   #   #  ##  #  #      #   #  #" << std::endl;
+    std::cout << "#  ####   #####  #####    #     #     #     #   #   #  # # #  ####   #####  #" << std::endl;
+    std::cout << "#  #      #   #  # ##     #     #     #     #   #   #  # # #  #      # ##   #" << std::endl;
+    std::cout << "#  #      #   #  #   #    #    ###    #    ###   ###   #  ##  #####  #   #  #" << std::endl;
+    std::cout << "#                                                                           #" << std::endl;
+    std::cout << "#############################################################################" << std::endl << std::endl;
     
     GmshInitialize(argc, argv);
     GModel *m = new GModel();
@@ -99,7 +100,7 @@ int main(int argc, char **argv)
     createPartitionBoundaries(m, false);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign mesh vertex to models..." << std::flush;
+    std::cout << "Assign mesh vertices to models..." << std::flush;
     for (unsigned int i = 0; i < nparts; i++)
     {
         assignMeshVerticesToModel(models[i]);
@@ -110,18 +111,17 @@ int main(int argc, char **argv)
     assignPartitionBoundariesToModels(m, models);
     std::cout << "Done!" << std::endl;
     
-    for(unsigned int i = 0; i < models.size(); i++)
-    {
-        std::string str = "Partition_";
-        str += std::to_string(i+1);
-        str += ".msh";
-        
-        models[i]->writeMSH(str.c_str());
-    }
-    std::cout << "Partition meshes writed." << std::endl;
+    std::cout << "Writing partition meshes..." << std::flush;
+    writeModels(models);
+    std::cout << "Done!" << std::endl;
     
+    std::cout << "Writing global mesh..." << std::flush;
     m->writeMSH("output.msh");
-    std::cout << "Global mesh writed." << std::endl;
+    std::cout << "Done!" << std::endl;
+    
+    std::cout << "Writing .pro file..." << std::flush;
+    writeProFile(models);
+    std::cout << "Done!" << std::endl;
   
     freeModels(&models);
     delete[] eptr;
