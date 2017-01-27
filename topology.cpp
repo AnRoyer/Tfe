@@ -1,6 +1,7 @@
 #include <iostream>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 #include "MElement.h"
@@ -600,7 +601,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
 
 void assignMeshVerticesToModel(GModel *gModel)
 {
-    std::map<MVertex*, GEntity*> vertexToEntity;
+    std::unordered_map<MVertex*, GEntity*> vertexToEntity;
     
     //Loop over regions
     for(GModel::riter it = gModel->firstRegion(); it != gModel->lastRegion(); ++it)
@@ -801,7 +802,7 @@ void assignMeshVerticesToModel(GModel *gModel)
     }
     
     //Fill the entities
-    for(std::map<MVertex*, GEntity*>::iterator it = vertexToEntity.begin(); it != vertexToEntity.end(); ++it)
+    for(std::unordered_map<MVertex*, GEntity*>::iterator it = vertexToEntity.begin(); it != vertexToEntity.end(); ++it)
     {
         it->second->addMeshVertex(it->first);
     }
@@ -836,6 +837,7 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             {
                 models[static_cast<partitionFace*>(f)->_partitions[j]-1]->add(f);
                 models[static_cast<partitionFace*>(f)->_partitions[j]-1]->setPhysicalName(name, f->dim(), maxNumPhysical);
+                gModel->setPhysicalName(name, f->dim(), maxNumPhysical);
             }
         }
     }
@@ -865,6 +867,7 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             {
                 models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->add(e);
                 models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->setPhysicalName(name, e->dim(), maxNumPhysical);
+                gModel->setPhysicalName(name, e->dim(), maxNumPhysical);
             }
         }
     }
@@ -894,6 +897,7 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             {
                 models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->add(v);
                 models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->setPhysicalName(name, v->dim(), maxNumPhysical);
+                gModel->setPhysicalName(name, v->dim(), maxNumPhysical);
             }
         }
     }
@@ -938,16 +942,21 @@ void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity
     std::string name = "_omega{";
     name += std::to_string(partition);
     name += "}";
-        
-    const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
+    
+    const int number = oldModel->setPhysicalName(name, oldEntity->dim(), 0);
+    oldEntity->addPhysicalEntity(number);
+    newModel->setPhysicalName(name, newEntity->dim(), number);
     newEntity->addPhysicalEntity(number);
     
     for(unsigned int i = 0; i < oldPhysical.size(); i++)
     {
         name = oldModel->getPhysicalName(oldEntity->dim(), oldPhysical[i]);
-            
-        const int number = newModel->setPhysicalName(name, newEntity->dim(), 0);
-        newEntity->addPhysicalEntity(number);
+        
+        if(name[0] != '_')
+        {
+            newModel->setPhysicalName(name, newEntity->dim(), oldPhysical[i]);
+            newEntity->addPhysicalEntity(oldPhysical[i]);
+        }
     }
 }
 

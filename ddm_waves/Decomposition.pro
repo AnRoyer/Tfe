@@ -66,9 +66,8 @@ Function{
     EndIf
   EndFor
 
-  /*
+  
   MPI_Printf["ListOfSubdomains = ", ListOfSubdomains()];
   MPI_Printf["ListOfFields = ", ListOfFields()];
   MPI_Printf["ListOfConnectedFields = ", ListOfConnectedFields()];
-  */
 }

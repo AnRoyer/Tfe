@@ -59,11 +59,12 @@ int main(int argc, char **argv)
     idx_t *epart = new idx_t[numElements];
     idx_t *npart = new idx_t[numVertices];
     idx_t nparts = atoi(argv[2]);
+    idx_t ncommon = 3;
     idx_t options[METIS_NOPTIONS];
     METIS_SetDefaultOptions(options);
-
-    const int error = METIS_PartMeshNodal((idx_t*)&numElements, (idx_t*)&numVertices, (idx_t*)eptr, (idx_t*)eind, NULL, NULL, &nparts, NULL, options, &objval, epart, npart);
-
+    
+    const int error = METIS_PartMeshDual((idx_t*)&numElements, (idx_t*)&numVertices, (idx_t*)eptr, (idx_t*)eind, NULL, NULL, &ncommon, &nparts, NULL, options, &objval, epart, npart);
+    
     switch(error)
     {
         case METIS_OK:
