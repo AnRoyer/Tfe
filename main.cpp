@@ -121,7 +121,7 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing .pro file..." << std::flush;
-    writeProFile(models);
+    writeProFile(m);
     std::cout << "Done!" << std::endl;
   
     freeModels(&models);
