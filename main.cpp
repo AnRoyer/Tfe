@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 
     for(unsigned int i = 0; i < numElements; i++)
     {
-        m->getMeshElementByTag(metisToGmshIndex[i])->setPartition(epart[i]+1); //epart has the first partition at zero and we want to start with one
+        m->getMeshElementByTag(metisToGmshIndex[i])->setPartition(epart[i]);
     }
     
     std::cout << "Creating new GModel..." << std::flush;
@@ -117,11 +117,11 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing global mesh..." << std::flush;
-    m->writeMSH("output.msh");
+    m->writeMSH("global.msh");
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing .pro file..." << std::flush;
-    writeProFile(m);
+    writeProFile(m, nparts);
     std::cout << "Done!" << std::endl;
   
     freeModels(&models);

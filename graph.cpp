@@ -2,6 +2,8 @@
 #include <map>
 #include <iostream>
 
+#include "MElementCut.h"
+
 #include "MTetrahedron.h"
 #include "MHexahedron.h"
 #include "MPrism.h"
@@ -26,62 +28,12 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GRegion *r = *it;
     
-        //Tetrahedra
-        for(unsigned int i = 0; i < r->tetrahedra.size(); i++)
-        {
-            const int tag = r->tetrahedra[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < r->tetrahedra[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,r->tetrahedra[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Hexahedra
-        for(unsigned int i = 0; i < r->hexahedra.size(); i++)
-        {
-            const int tag = r->hexahedra[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,r->hexahedra[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Prisms
-        for(unsigned int i = 0; i < r->prisms.size(); i++)
-        {
-            const int tag = r->prisms[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,r->prisms[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Pyramids
-        for(unsigned int i = 0; i < r->pyramids.size(); i++)
-        {
-            const int tag = r->pyramids[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,r->pyramids[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Trihedra
-        for(unsigned int i = 0; i < r->trihedra.size(); i++)
-        {
-            const int tag = r->trihedra[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,r->trihedra[i]->getVertex(j)->getNum()-1));
-            }
-        }
-    
-        //Polyhedra ????????
+        fillElementsNodesMap(elementsNodesMap, r->tetrahedra.begin(), r->tetrahedra.end());
+        fillElementsNodesMap(elementsNodesMap, r->hexahedra.begin(), r->hexahedra.end());
+        fillElementsNodesMap(elementsNodesMap, r->prisms.begin(), r->prisms.end());
+        fillElementsNodesMap(elementsNodesMap, r->pyramids.begin(), r->pyramids.end());
+        fillElementsNodesMap(elementsNodesMap, r->trihedra.begin(), r->trihedra.end());
+        fillElementsNodesMap(elementsNodesMap, r->polyhedra.begin(), r->polyhedra.end());
     }
 
     //Loop over faces
@@ -89,29 +41,9 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GFace *f = *it;
 
-        //Triangles
-        for(unsigned int i = 0; i < f->triangles.size(); i++)
-        {
-            const int tag = f->triangles[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < f->triangles[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,f->triangles[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Quadrangles
-        for(unsigned int i = 0; i < f->quadrangles.size(); i++)
-        {
-            const int tag = f->quadrangles[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,f->quadrangles[i]->getVertex(j)->getNum()-1));
-            }
-        }
-
-        //Polygons ????????
+        fillElementsNodesMap(elementsNodesMap, f->triangles.begin(), f->triangles.end());
+        fillElementsNodesMap(elementsNodesMap, f->quadrangles.begin(), f->quadrangles.end());
+        fillElementsNodesMap(elementsNodesMap, f->polygons.begin(), f->polygons.end());
     }
 
     //Loop over edges
@@ -119,16 +51,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GEdge *e = *it;
 
-        //Lines
-        for(unsigned int i = 0; i < e->lines.size(); i++)
-        {
-            const int tag = e->lines[i]->getNum()-1;
-
-            for(unsigned int j = 0; j < e->lines[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,e->lines[i]->getVertex(j)->getNum()-1));
-            }
-        }
+        fillElementsNodesMap(elementsNodesMap, e->lines.begin(), e->lines.end());
     }
 
     //Loop over vertices
@@ -136,16 +59,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GVertex *v = *it;
 
-        for(unsigned int i = 0; i < v->points.size(); i++)
-        {
-            const int tag = v->points[i]->getNum()-1;
-
-            //Points
-            for(unsigned int j = 0; j < v->points[i]->getNumVertices(); j++)
-            {
-                elementsNodesMap.insert(std::pair<int, int>(tag,v->points[i]->getVertex(j)->getNum()-1));
-            }
-        }
+        fillElementsNodesMap(elementsNodesMap, v->points.begin(), v->points.end());
     }
 
     //create mesh format for METIS
@@ -174,4 +88,18 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
         positionInd++;
     }
     *eind = eindTemp;
+}
+
+template <class ITERATOR>
+void fillElementsNodesMap(std::multimap<int, int> &elementsNodesMap, ITERATOR it_beg, ITERATOR it_end)
+{
+    for(ITERATOR it = it_beg; it != it_end; ++it)
+    {
+        const int tag = (*it)->getNum()-1;
+        
+        for(unsigned int j = 0; j < (*it)->getNumVertices(); j++)
+        {
+            elementsNodesMap.insert(std::pair<int, int>(tag,(*it)->getVertex(j)->getNum()-1));
+        }
+    }
 }

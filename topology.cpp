@@ -1,10 +1,10 @@
 #include <iostream>
 #include <set>
 #include <map>
-#include <unordered_map>
 #include <string>
 
 #include "MElement.h"
+#include "MElementCut.h"
 
 #include "MTetrahedron.h"
 #include "MHexahedron.h"
@@ -418,6 +418,7 @@ void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVerte
 
 std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
 {
+    int maxDim = -1;
     std::vector<GModel*> newModels(nparts, nullptr);
     
     for (unsigned int i = 0; i < nparts; i++)
@@ -430,85 +431,104 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
     {
         GRegion *r = *it;
         
-        std::vector<GRegion *> modelsHaveRegion(nparts, nullptr);
+        std::vector<GRegion *> newModelHaveRegion(nparts, nullptr);
         
         //Tetrahedra
         for(unsigned int i = 0; i < r->tetrahedra.size(); i++)
         {
-            const int partition = r->tetrahedra[i]->getPartition()-1;
-            if(!modelsHaveRegion[partition])
+            const int partition = r->tetrahedra[i]->getPartition();
+            if(!newModelHaveRegion[partition])
             {
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
-                modelsHaveRegion[partition] = dr;
-                addPhysical(newModels[partition], dr, gModel, r, partition+1);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
             }
             
-            modelsHaveRegion[r->tetrahedra[i]->getPartition()-1]->tetrahedra.push_back(r->tetrahedra[i]);
+            newModelHaveRegion[r->tetrahedra[i]->getPartition()]->tetrahedra.push_back(r->tetrahedra[i]);
         }
         
 
         //Hexahedra
         for(unsigned int i = 0; i < r->hexahedra.size(); i++)
         {
-            const int partition = r->hexahedra[i]->getPartition()-1;
-            if(!modelsHaveRegion[partition])
+            const int partition = r->hexahedra[i]->getPartition();
+            if(!newModelHaveRegion[partition])
             {
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
-                modelsHaveRegion[partition] = dr;
-                addPhysical(newModels[partition], dr, gModel, r, partition+1);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
             }
             
-            modelsHaveRegion[r->hexahedra[i]->getPartition()-1]->hexahedra.push_back(r->hexahedra[i]);
+            newModelHaveRegion[r->hexahedra[i]->getPartition()]->hexahedra.push_back(r->hexahedra[i]);
         }
         
         //Prisms
         for(unsigned int i = 0; i < r->prisms.size(); i++)
         {
-            const int partition = r->prisms[i]->getPartition()-1;
-            if(!modelsHaveRegion[partition])
+            const int partition = r->prisms[i]->getPartition();
+            if(!newModelHaveRegion[partition])
             {
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
-                modelsHaveRegion[partition] = dr;
-                addPhysical(newModels[partition], dr, gModel, r, partition+1);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
             }
             
-            modelsHaveRegion[r->prisms[i]->getPartition()-1]->prisms.push_back(r->prisms[i]);
+            newModelHaveRegion[r->prisms[i]->getPartition()]->prisms.push_back(r->prisms[i]);
         }
         
         //Pyramids
         for(unsigned int i = 0; i < r->pyramids.size(); i++)
         {
-            const int partition = r->pyramids[i]->getPartition()-1;
-            if(!modelsHaveRegion[partition])
+            const int partition = r->pyramids[i]->getPartition();
+            if(!newModelHaveRegion[partition])
             {
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
-                modelsHaveRegion[partition] = dr;
-                addPhysical(newModels[partition], dr, gModel, r, partition+1);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
             }
             
-            modelsHaveRegion[r->pyramids[i]->getPartition()-1]->pyramids.push_back(r->pyramids[i]);
+            newModelHaveRegion[r->pyramids[i]->getPartition()]->pyramids.push_back(r->pyramids[i]);
         }
         
         //Trihedra
         for(unsigned int i = 0; i < r->trihedra.size(); i++)
         {
-            const int partition = r->trihedra[i]->getPartition()-1;
-            if(!modelsHaveRegion[partition])
+            const int partition = r->trihedra[i]->getPartition();
+            if(!newModelHaveRegion[partition])
             {
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
-                modelsHaveRegion[partition] = dr;
-                addPhysical(newModels[partition], dr, gModel, r, partition+1);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
             }
             
-            modelsHaveRegion[r->trihedra[i]->getPartition()-1]->trihedra.push_back(r->trihedra[i]);
+            newModelHaveRegion[r->trihedra[i]->getPartition()]->trihedra.push_back(r->trihedra[i]);
         }
         
-        //Polyhedra ????????
+        //Polyhedra
+        for(unsigned int i = 0; i < r->polyhedra.size(); i++)
+        {
+            const int partition = r->polyhedra[i]->getPartition();
+            if(!newModelHaveRegion[partition])
+            {
+                discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
+                newModels[partition]->add(dr);
+                newModelHaveRegion[partition] = dr;
+                maxDim = 3;
+                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+            }
+            
+            newModelHaveRegion[r->polyhedra[i]->getPartition()]->polyhedra.push_back(r->polyhedra[i]);
+        }
     }
     
     //Loop over faces
@@ -516,39 +536,64 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
     {
         GFace *f = *it;
         
-        std::vector<GFace *> modelsHaveFace(nparts, nullptr);
+        std::vector<GFace *> newModelHaveFace(nparts, nullptr);
         
         //Triangles
         for(unsigned int i = 0; i < f->triangles.size(); i++)
         {
-            const int partition = f->triangles[i]->getPartition()-1;
-            if(!modelsHaveFace[partition])
+            const int partition = f->triangles[i]->getPartition();
+            if(!newModelHaveFace[partition])
             {
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
-                modelsHaveFace[partition] = df;
-                addPhysical(newModels[partition], df, gModel, f, partition+1);
+                newModelHaveFace[partition] = df;
+                if(maxDim == -1)
+                {
+                    maxDim = 2;
+                }
+                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
             }
             
-            modelsHaveFace[f->triangles[i]->getPartition()-1]->triangles.push_back(f->triangles[i]);
+            newModelHaveFace[f->triangles[i]->getPartition()]->triangles.push_back(f->triangles[i]);
         }
         
         //Quadrangles
         for(unsigned int i = 0; i < f->quadrangles.size(); i++)
         {
-            const int partition = f->quadrangles[i]->getPartition()-1;
-            if(!modelsHaveFace[partition])
+            const int partition = f->quadrangles[i]->getPartition();
+            if(!newModelHaveFace[partition])
             {
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
-                modelsHaveFace[partition] = df;
-                addPhysical(newModels[partition], df, gModel, f, partition+1);
+                newModelHaveFace[partition] = df;
+                if(maxDim == -1)
+                {
+                    maxDim = 2;
+                }
+                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
             }
             
-            modelsHaveFace[f->quadrangles[i]->getPartition()-1]->quadrangles.push_back(f->quadrangles[i]);
+            newModelHaveFace[f->quadrangles[i]->getPartition()]->quadrangles.push_back(f->quadrangles[i]);
         }
         
-        //Polygons ????????
+        //Polygons
+        for(unsigned int i = 0; i < f->polygons.size(); i++)
+        {
+            const int partition = f->polygons[i]->getPartition();
+            if(!newModelHaveFace[partition])
+            {
+                discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
+                newModels[partition]->add(df);
+                newModelHaveFace[partition] = df;
+                if(maxDim == -1)
+                {
+                    maxDim = 2;
+                }
+                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
+            }
+            
+            newModelHaveFace[f->polygons[i]->getPartition()]->polygons.push_back(f->polygons[i]);
+        }
     }
     
     //Loop over edges
@@ -556,21 +601,25 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
     {
         GEdge *e = *it;
         
-        std::vector<GEdge *> modelsHaveEdge(nparts, nullptr);
+        std::vector<GEdge *> newModelHaveEdge(nparts, nullptr);
         
         //Lines
         for(unsigned int i = 0; i < e->lines.size(); i++)
         {
-            const int partition = e->lines[i]->getPartition()-1;
-            if(!modelsHaveEdge[partition])
+            const int partition = e->lines[i]->getPartition();
+            if(!newModelHaveEdge[partition])
             {
                 discreteEdge *de = new discreteEdge(newModels[partition], newModels[partition]->getNumEdges()+1, nullptr, nullptr);
                 newModels[partition]->add(de);
-                modelsHaveEdge[partition] = de;
-                addPhysical(newModels[partition], de, gModel, e, partition+1);
+                newModelHaveEdge[partition] = de;
+                if(maxDim == -1)
+                {
+                    maxDim = 1;
+                }
+                addPhysical(newModels[partition], de, gModel, e, partition, maxDim);
             }
             
-            modelsHaveEdge[e->lines[i]->getPartition()-1]->lines.push_back(e->lines[i]);
+            newModelHaveEdge[e->lines[i]->getPartition()]->lines.push_back(e->lines[i]);
         }
     }
     
@@ -579,20 +628,24 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
     {
         GVertex *v = *it;
         
-        std::vector<GVertex *> modelsHaveVertex(nparts, nullptr);
+        std::vector<GVertex *> newModelHaveVertex(nparts, nullptr);
         
         for(unsigned int i = 0; i < v->points.size(); i++)
         {
-            const int partition = v->points[i]->getPartition()-1;
-            if(!modelsHaveVertex[partition])
+            const int partition = v->points[i]->getPartition();
+            if(!newModelHaveVertex[partition])
             {
                 discreteVertex *dv = new discreteVertex(newModels[partition], newModels[partition]->getNumVertices()+1);
                 newModels[partition]->add(dv);
-                modelsHaveVertex[partition] = dv;
-                addPhysical(newModels[partition], dv, gModel, v, partition+1);
+                newModelHaveVertex[partition] = dv;
+                if(maxDim == -1)
+                {
+                    maxDim = 0;
+                }
+                addPhysical(newModels[partition], dv, gModel, v, partition, maxDim);
             }
             
-            modelsHaveVertex[v->points[i]->getPartition()-1]->points.push_back(v->points[i]);
+            newModelHaveVertex[v->points[i]->getPartition()]->points.push_back(v->points[i]);
         }
     }
     
@@ -608,102 +661,12 @@ void assignMeshVerticesToModel(GModel *gModel)
     {
         GRegion *r = *it;
         
-        //Tetrahedra
-        for(unsigned int i = 0; i < r->tetrahedra.size(); i++)
-        {
-            for(unsigned int j = 0; j < r->tetrahedra[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(r->tetrahedra[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[r->tetrahedra[i]->getVertex(j)]->dim() > r->dim())
-                    {
-                        vertexToEntity[r->tetrahedra[i]->getVertex(j)] = r;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[r->tetrahedra[i]->getVertex(j)] = r;
-                }
-            }
-        }
-        
-        //Hexahedra
-        for(unsigned int i = 0; i < r->hexahedra.size(); i++)
-        {
-            for(unsigned int j = 0; j < r->hexahedra[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(r->hexahedra[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[r->hexahedra[i]->getVertex(j)]->dim() > r->dim())
-                    {
-                        vertexToEntity[r->hexahedra[i]->getVertex(j)] = r;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[r->hexahedra[i]->getVertex(j)] = r;
-                }
-            }
-        }
-         
-        //Prisms
-        for(unsigned int i = 0; i < r->prisms.size(); i++)
-        {
-            for(unsigned int j = 0; j < r->prisms[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(r->prisms[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[r->prisms[i]->getVertex(j)]->dim() > r->dim())
-                    {
-                        vertexToEntity[r->prisms[i]->getVertex(j)] = r;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[r->prisms[i]->getVertex(j)] = r;
-                }
-            }
-        }
-         
-        //Pyramids
-        for(unsigned int i = 0; i < r->pyramids.size(); i++)
-        {
-            for(unsigned int j = 0; j < r->pyramids[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(r->pyramids[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[r->pyramids[i]->getVertex(j)]->dim() > r->dim())
-                    {
-                        vertexToEntity[r->pyramids[i]->getVertex(j)] = r;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[r->pyramids[i]->getVertex(j)] = r;
-                }
-            }
-        }
-         
-        //Trihedra
-        for(unsigned int i = 0; i < r->trihedra.size(); i++)
-        {
-            for(unsigned int j = 0; j < r->trihedra[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(r->trihedra[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[r->trihedra[i]->getVertex(j)]->dim() > r->dim())
-                    {
-                        vertexToEntity[r->trihedra[i]->getVertex(j)] = r;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[r->trihedra[i]->getVertex(j)] = r;
-                }
-            }
-        }
-        
-        //Polyhedra ????????
+        fillVertexToEntity(vertexToEntity, r, r->tetrahedra.begin(), r->tetrahedra.end());
+        fillVertexToEntity(vertexToEntity, r, r->hexahedra.begin(), r->hexahedra.end());
+        fillVertexToEntity(vertexToEntity, r, r->prisms.begin(), r->prisms.end());
+        fillVertexToEntity(vertexToEntity, r, r->pyramids.begin(), r->pyramids.end());
+        fillVertexToEntity(vertexToEntity, r, r->trihedra.begin(), r->trihedra.end());
+        fillVertexToEntity(vertexToEntity, r, r->polyhedra.begin(), r->polyhedra.end());
     }
     
     //Loop over faces
@@ -711,45 +674,9 @@ void assignMeshVerticesToModel(GModel *gModel)
     {
         GFace *f = *it;
         
-        //Triangles
-        for(unsigned int i = 0; i < f->triangles.size(); i++)
-        {
-            for(unsigned int j = 0; j < f->triangles[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(f->triangles[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[f->triangles[i]->getVertex(j)]->dim() > f->dim())
-                    {
-                        vertexToEntity[f->triangles[i]->getVertex(j)] = f;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[f->triangles[i]->getVertex(j)] = f;
-                }
-            }
-        }
-    
-        //Quadrangles
-        for(unsigned int i = 0; i < f->quadrangles.size(); i++)
-        {
-            for(unsigned int j = 0; j < f->quadrangles[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(f->quadrangles[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[f->quadrangles[i]->getVertex(j)]->dim() > f->dim())
-                    {
-                        vertexToEntity[f->quadrangles[i]->getVertex(j)] = f;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[f->quadrangles[i]->getVertex(j)] = f;
-                }
-            }
-        }
-         
-        //Polygons ????????
+        fillVertexToEntity(vertexToEntity, f, f->triangles.begin(), f->triangles.end());
+        fillVertexToEntity(vertexToEntity, f, f->quadrangles.begin(), f->quadrangles.end());
+        fillVertexToEntity(vertexToEntity, f, f->polygons.begin(), f->polygons.end());
     }
     
     //Loop over edges
@@ -757,24 +684,7 @@ void assignMeshVerticesToModel(GModel *gModel)
     {
         GEdge *e = *it;
         
-        //Lines
-        for(unsigned int i = 0; i < e->lines.size(); i++)
-        {
-            for(unsigned int j = 0; j < e->lines[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(e->lines[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[e->lines[i]->getVertex(j)]->dim() > e->dim())
-                    {
-                        vertexToEntity[e->lines[i]->getVertex(j)] = e;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[e->lines[i]->getVertex(j)] = e;
-                }
-            }
-        }
+        fillVertexToEntity(vertexToEntity, e, e->lines.begin(), e->lines.end());
     }
     
     //Loop over vertices
@@ -782,29 +692,35 @@ void assignMeshVerticesToModel(GModel *gModel)
     {
         GVertex *v = *it;
         
-        for(unsigned int i = 0; i < v->points.size(); i++)
-        {
-            for(unsigned int j = 0; j < v->points[i]->getNumVertices(); j++)
-            {
-                if(vertexToEntity.count(v->points[i]->getVertex(j)) > 0)
-                {
-                    if(vertexToEntity[v->points[i]->getVertex(j)]->dim() > v->dim())
-                    {
-                        vertexToEntity[v->points[i]->getVertex(j)] = v;
-                    }
-                }
-                else
-                {
-                    vertexToEntity[v->points[i]->getVertex(j)] = v;
-                }
-            }
-        }
+        fillVertexToEntity(vertexToEntity, v, v->points.begin(), v->points.end());
     }
     
     //Fill the entities
     for(std::unordered_map<MVertex*, GEntity*>::iterator it = vertexToEntity.begin(); it != vertexToEntity.end(); ++it)
     {
         it->second->addMeshVertex(it->first);
+    }
+}
+
+template <class ITERATOR>
+void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, GEntity* entity, ITERATOR it_beg, ITERATOR it_end)
+{
+    for(ITERATOR it = it_beg; it != it_end; ++it)
+    {
+        for(unsigned int j = 0; j < (*it)->getNumVertices(); j++)
+        {
+            if(vertexToEntity.count((*it)->getVertex(j)) > 0)
+            {
+                if(vertexToEntity[(*it)->getVertex(j)]->dim() > entity->dim())
+                {
+                    vertexToEntity[(*it)->getVertex(j)] = entity;
+                }
+            }
+            else
+            {
+                vertexToEntity[(*it)->getVertex(j)] = entity;
+            }
+        }
     }
 }
 
@@ -835,8 +751,8 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             
             for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
             {
-                models[static_cast<partitionFace*>(f)->_partitions[j]-1]->add(f);
-                models[static_cast<partitionFace*>(f)->_partitions[j]-1]->setPhysicalName(name, f->dim(), maxNumPhysical);
+                models[static_cast<partitionFace*>(f)->_partitions[j]]->add(f);
+                models[static_cast<partitionFace*>(f)->_partitions[j]]->setPhysicalName(name, f->dim(), maxNumPhysical);
                 gModel->setPhysicalName(name, f->dim(), maxNumPhysical);
             }
         }
@@ -865,8 +781,8 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             
             for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
             {
-                models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->add(e);
-                models[static_cast<partitionEdge*>(e)->_partitions[j]-1]->setPhysicalName(name, e->dim(), maxNumPhysical);
+                models[static_cast<partitionEdge*>(e)->_partitions[j]]->add(e);
+                models[static_cast<partitionEdge*>(e)->_partitions[j]]->setPhysicalName(name, e->dim(), maxNumPhysical);
                 gModel->setPhysicalName(name, e->dim(), maxNumPhysical);
             }
         }
@@ -895,8 +811,8 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
             
             for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
             {
-                models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->add(v);
-                models[static_cast<partitionVertex*>(v)->_partitions[j]-1]->setPhysicalName(name, v->dim(), maxNumPhysical);
+                models[static_cast<partitionVertex*>(v)->_partitions[j]]->add(v);
+                models[static_cast<partitionVertex*>(v)->_partitions[j]]->setPhysicalName(name, v->dim(), maxNumPhysical);
                 gModel->setPhysicalName(name, v->dim(), maxNumPhysical);
             }
         }
@@ -935,18 +851,22 @@ void freeModels(std::vector<GModel*> *models)
     }
 }
 
-void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition)
+void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition, int maxDim)
 {
     std::vector<int> oldPhysical = oldEntity->getPhysicalEntities();
+    std::string name;
     
-    std::string name = "_omega{";
-    name += std::to_string(partition);
-    name += "}";
+    if(maxDim == newEntity->dim())
+    {
+        name = "_omega{";
+        name += std::to_string(partition);
+        name += "}";
     
-    const int number = oldModel->setPhysicalName(name, oldEntity->dim(), 0);
-    oldEntity->addPhysicalEntity(number);
-    newModel->setPhysicalName(name, newEntity->dim(), number);
-    newEntity->addPhysicalEntity(number);
+        const int number = oldModel->setPhysicalName(name, oldEntity->dim(), oldModel->getMaxPhysicalNumber(-1)+1);
+        oldEntity->addPhysicalEntity(number);
+        newModel->setPhysicalName(name, newEntity->dim(), number);
+        newEntity->addPhysicalEntity(number);
+    }
     
     for(unsigned int i = 0; i < oldPhysical.size(); i++)
     {

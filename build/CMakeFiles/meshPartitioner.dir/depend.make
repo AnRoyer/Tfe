@@ -19,6 +19,7 @@ CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/GmshDefines.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/GmshMessage.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MEdge.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MElement.h
+CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MElementCut.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MFace.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MHexahedron.h
 CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../include/gmsh/MLine.h

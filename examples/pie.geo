@@ -46,6 +46,6 @@ Physical Line("int") = {2, 1, 4, 3};
 //+
 Physical Surface("surf") = {11};
 //+
-Transfinite Line {2, 1, 4, 3} = 5 Using Progression 1;
+Transfinite Line {2, 1, 4, 3} = 11 Using Progression 1;
 //+
-Transfinite Line {6, 5, 8, 7} = 25 Using Progression 1;
+Transfinite Line {6, 5, 8, 7} = 55 Using Progression 1;

@@ -43,4 +43,4 @@ Physical Line("l2") = {5, 6, 7};
 //+
 Physical Line("l3") = {4, 1, 2};
 //+
-Transfinite Line {5, 6, 4, 3, 7, 1, 2} = 10 Using Progression 1;
+Transfinite Line {5, 6, 4, 3, 7, 1, 2} = 31 Using Progression 1;

@@ -629,6 +629,8 @@ map
 -
 iostream
 -
+MElementCut.h
+/Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/MElementCut.h
 MTetrahedron.h
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/MTetrahedron.h
 MHexahedron.h
@@ -709,12 +711,12 @@ set
 -
 map
 -
-unordered_map
--
 string
 -
 MElement.h
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/MElement.h
+MElementCut.h
+/Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/MElementCut.h
 MTetrahedron.h
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/MTetrahedron.h
 MHexahedron.h
@@ -751,6 +753,8 @@ topology.h
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/topology.h
 
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/topology.h
+unordered_map
+-
 GModel.h
 /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/GModel.h
 partitionFace.h

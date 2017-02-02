@@ -20,6 +20,7 @@ CMakeFiles/meshPartitioner.dir/graph.cpp.o
  ../include/gmsh/GmshMessage.h
  ../include/gmsh/MEdge.h
  ../include/gmsh/MElement.h
+ ../include/gmsh/MElementCut.h
  ../include/gmsh/MFace.h
  ../include/gmsh/MHexahedron.h
  ../include/gmsh/MLine.h
