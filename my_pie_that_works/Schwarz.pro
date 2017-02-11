@@ -3,16 +3,17 @@ Include "SchwarzMacros.pro";
 Resolution {
   { Name DDM;
     System {
-      For ii In {0: #ListOfSubdomains()-1}
-        idom = ListOfSubdomains(ii);
-        { Name Vol~{idom}; NameOfFormulation Vol~{idom};
-          Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], idom]; }
-        For iSide In {0:1}
-          { Name Sur~{idom}~{iSide}; NameOfFormulation Sur~{idom}~{iSide};
-            Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], idom]; }
+      For ii In {0: #myD()-1}
+        i = myD(ii);
+        { Name Vol~{i}; NameOfFormulation Vol~{i};
+          Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], i]; }
+        For jj In {0:#myD~{i}()-1}
+          j = myD~{i}(jj);
+          { Name Sur~{i}~{j}; NameOfFormulation Sur~{i}~{j};
+            Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], i]; }
           If (PRECONDITIONER)
-            { Name SurPc~{idom}~{iSide}; NameOfFormulation SurPc~{idom}~{iSide};
-              Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], idom]; }
+            { Name SurPc~{i}~{j}; NameOfFormulation SurPc~{i}~{j};
+              Type Complex; NameOfMesh Sprintf[StrCat[MSH_NAME, "%g.msh"], i]; }
           EndIf
         EndFor
       EndFor
@@ -70,7 +71,7 @@ Resolution {
                                    // tested in cyclic case)
       	  For ii In{0:nCuts}
       	    For proc In {0:MPI_Size-1}
-      	      idom = ListOfCuts(ii);
+      	      i = ListOfCuts(ii);
       	      Call InitSweep;
       	    EndFor
       	  EndFor
@@ -81,9 +82,9 @@ Resolution {
             For ii In {ListOfCuts(iCut)+1: ListOfCuts(iCut+1)-1:1}
               For proc In {0:MPI_Size-1}
                 // index for the forward sweep
-                idom_f = ii % N_DOM;
+                i_f = ii % N_DOM;
                 // index for the backward sweep
-                idom_b = (ListOfCuts(iCut) + ListOfCuts(iCut+1) - ii) % N_DOM;
+                i_b = (ListOfCuts(iCut) + ListOfCuts(iCut+1) - ii) % N_DOM;
                 // these two calls are independent and work in parallel
       		Call SolveAndStepForward;
                 Call SolveAndStepBackward;

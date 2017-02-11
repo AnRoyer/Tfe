@@ -30,7 +30,7 @@ void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, 
 
 void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models);
 
-void freeModels(std::vector<GModel*> *models);
+void freeModels(std::vector<GModel*> &models);
 
 void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition, int maxDim);
 

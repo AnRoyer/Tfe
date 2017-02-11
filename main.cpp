@@ -123,8 +123,9 @@ int main(int argc, char **argv)
     std::cout << "Writing .pro file..." << std::flush;
     writeProFile(m, nparts);
     std::cout << "Done!" << std::endl;
-  
-    freeModels(&models);
+    
+    freeModels(models);
+    
     delete[] eptr;
     delete[] eind;
     delete m;

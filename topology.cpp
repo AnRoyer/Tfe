@@ -819,30 +819,28 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
     }
 }
 
-void freeModels(std::vector<GModel*> *models)
+void freeModels(std::vector<GModel*> &models)
 {
-    for(unsigned int i = 0; i < models->size(); i++)
+    for(unsigned int i = 0; i < models.size(); i++)
     {
         std::vector<GEntity*> entities;
-        (*models)[i]->getEntities(entities);
+        models[i]->getEntities(entities);
         
         for(unsigned int j = 0; j < entities.size(); j++)
-        {
-            entities[j]->mesh_vertices.clear();
-            
+        {            
             switch(entities[j]->dim())
             {
                 case 3:
-                    (*models)[i]->remove(static_cast<GRegion*>(entities[j]));
+                    models[i]->remove(static_cast<GRegion*>(entities[j]));
                     break;
                 case 2:
-                    (*models)[i]->remove(static_cast<GFace*>(entities[j]));
+                    models[i]->remove(static_cast<GFace*>(entities[j]));
                     break;
                 case 1:
-                    (*models)[i]->remove(static_cast<GEdge*>(entities[j]));
+                    models[i]->remove(static_cast<GEdge*>(entities[j]));
                     break;
                 case 0:
-                    (*models)[i]->remove(static_cast<GVertex*>(entities[j]));
+                    models[i]->remove(static_cast<GVertex*>(entities[j]));
                     break;
                 default:
                     break;
