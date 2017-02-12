@@ -22,7 +22,7 @@ void assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, 
 void assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::vector<MElement*> &v, std::set<partitionFace*, Less_partitionFace> &pfaces);
 void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces);
 
-std::vector<GModel*> createNewModels(GModel *gModel, int nparts);
+std::vector<GModel*> createNewModels(GModel *gModel, GModel *global, int nparts);
 
 void assignMeshVerticesToModel(GModel *gModel);
 template <class ITERATOR>
@@ -30,9 +30,9 @@ void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, 
 
 void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models);
 
-void freeModels(std::vector<GModel*> &models);
+void freeModels(std::vector<GModel*> &models, GModel *global);
 
-void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition, int maxDim);
+void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, GModel *globalModel, GEntity *globalEntity, int partition, int maxDim);
 
 
 #endif //TOPOLOGY_INCLUDED

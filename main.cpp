@@ -94,11 +94,8 @@ int main(int argc, char **argv)
     }
     
     std::cout << "Creating new GModel..." << std::flush;
-    std::vector<GModel*> models = createNewModels(m, nparts);
-    std::cout << "Done!" << std::endl;
-    
-    std::cout << "Creating new elements..." << std::endl;
-    createPartitionBoundaries(m, false);
+    GModel* global = new GModel();
+    std::vector<GModel*> models = createNewModels(m, global, nparts);
     std::cout << "Done!" << std::endl;
     
     std::cout << "Assign mesh vertices to models..." << std::flush;
@@ -106,10 +103,15 @@ int main(int argc, char **argv)
     {
         assignMeshVerticesToModel(models[i]);
     }
+    assignMeshVerticesToModel(global);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign partition boundary to models..." << std::flush;
-    assignPartitionBoundariesToModels(m, models);
+    std::cout << "Creating new elements..." << std::endl;
+    createPartitionBoundaries(global, false);
+    std::cout << "Done!" << std::endl;
+    
+    std::cout << "Assign partition boundary to global model..." << std::flush;
+    assignPartitionBoundariesToModels(global, models);
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing partition meshes..." << std::flush;
@@ -117,14 +119,14 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing global mesh..." << std::flush;
-    m->writeMSH("global.msh");
+    global->writeMSH("global.msh");
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing .pro file..." << std::flush;
-    writeProFile(m, nparts);
+    writeProFile(global, nparts);
     std::cout << "Done!" << std::endl;
     
-    freeModels(models);
+    freeModels(models, global);
     
     delete[] eptr;
     delete[] eind;

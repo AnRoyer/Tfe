@@ -487,7 +487,7 @@ void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVerte
     ppv->points.push_back(new MPoint(ve));
 }
 
-std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
+std::vector<GModel*> createNewModels(GModel *gModel, GModel *global, int nparts)
 {
     int maxDim = -1;
     std::vector<GModel*> newModels(nparts, nullptr);
@@ -503,6 +503,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
         GRegion *r = *it;
         
         std::vector<GRegion *> newModelHaveRegion(nparts, nullptr);
+        std::vector<GRegion *> globalHaveRegion(nparts, nullptr);
         
         //Tetrahedra
         for(unsigned int i = 0; i < r->tetrahedra.size(); i++)
@@ -513,11 +514,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->tetrahedra[i]->getPartition()]->tetrahedra.push_back(r->tetrahedra[i]);
+            globalHaveRegion[r->tetrahedra[i]->getPartition()]->tetrahedra.push_back(r->tetrahedra[i]);
         }
         
 
@@ -530,11 +537,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->hexahedra[i]->getPartition()]->hexahedra.push_back(r->hexahedra[i]);
+            globalHaveRegion[r->hexahedra[i]->getPartition()]->hexahedra.push_back(r->hexahedra[i]);
         }
         
         //Prisms
@@ -546,11 +559,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->prisms[i]->getPartition()]->prisms.push_back(r->prisms[i]);
+            globalHaveRegion[r->prisms[i]->getPartition()]->prisms.push_back(r->prisms[i]);
         }
         
         //Pyramids
@@ -562,11 +581,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->pyramids[i]->getPartition()]->pyramids.push_back(r->pyramids[i]);
+            globalHaveRegion[r->pyramids[i]->getPartition()]->pyramids.push_back(r->pyramids[i]);
         }
         
         //Trihedra
@@ -578,11 +603,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->trihedra[i]->getPartition()]->trihedra.push_back(r->trihedra[i]);
+            globalHaveRegion[r->trihedra[i]->getPartition()]->trihedra.push_back(r->trihedra[i]);
         }
         
         //Polyhedra
@@ -594,11 +625,17 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteRegion *dr = new discreteRegion(newModels[partition], newModels[partition]->getNumRegions()+1);
                 newModels[partition]->add(dr);
                 newModelHaveRegion[partition] = dr;
+                
+                discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
+                global->add(drGlobal);
+                globalHaveRegion[partition] = drGlobal;
+                
                 maxDim = 3;
-                addPhysical(newModels[partition], dr, gModel, r, partition, maxDim);
+                addPhysical(newModels[partition], dr, gModel, r, global, drGlobal, partition, maxDim);
             }
             
             newModelHaveRegion[r->polyhedra[i]->getPartition()]->polyhedra.push_back(r->polyhedra[i]);
+            globalHaveRegion[r->polyhedra[i]->getPartition()]->polyhedra.push_back(r->polyhedra[i]);
         }
     }
     
@@ -608,6 +645,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
         GFace *f = *it;
         
         std::vector<GFace *> newModelHaveFace(nparts, nullptr);
+        std::vector<GFace *> globalModelHaveFace(nparts, nullptr);
         
         //Triangles
         for(unsigned int i = 0; i < f->triangles.size(); i++)
@@ -618,14 +656,20 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
                 newModelHaveFace[partition] = df;
+                
+                discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
+                global->add(dfGlobal);
+                globalModelHaveFace[partition] = dfGlobal;
+                
                 if(maxDim == -1)
                 {
                     maxDim = 2;
                 }
-                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
+                addPhysical(newModels[partition], df, gModel, f, global, dfGlobal, partition, maxDim);
             }
             
             newModelHaveFace[f->triangles[i]->getPartition()]->triangles.push_back(f->triangles[i]);
+            globalModelHaveFace[f->triangles[i]->getPartition()]->triangles.push_back(f->triangles[i]);
         }
         
         //Quadrangles
@@ -637,14 +681,20 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
                 newModelHaveFace[partition] = df;
+                
+                discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
+                global->add(dfGlobal);
+                globalModelHaveFace[partition] = dfGlobal;
+                
                 if(maxDim == -1)
                 {
                     maxDim = 2;
                 }
-                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
+                addPhysical(newModels[partition], df, gModel, f, global, dfGlobal, partition, maxDim);
             }
             
             newModelHaveFace[f->quadrangles[i]->getPartition()]->quadrangles.push_back(f->quadrangles[i]);
+            globalModelHaveFace[f->quadrangles[i]->getPartition()]->quadrangles.push_back(f->quadrangles[i]);
         }
         
         //Polygons
@@ -656,14 +706,20 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteFace *df = new discreteFace(newModels[partition], newModels[partition]->getNumFaces()+1);
                 newModels[partition]->add(df);
                 newModelHaveFace[partition] = df;
+                
+                discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
+                global->add(dfGlobal);
+                globalModelHaveFace[partition] = dfGlobal;
+                
                 if(maxDim == -1)
                 {
                     maxDim = 2;
                 }
-                addPhysical(newModels[partition], df, gModel, f, partition, maxDim);
+                addPhysical(newModels[partition], df, gModel, f, global, dfGlobal, partition, maxDim);
             }
             
             newModelHaveFace[f->polygons[i]->getPartition()]->polygons.push_back(f->polygons[i]);
+            globalModelHaveFace[f->quadrangles[i]->getPartition()]->quadrangles.push_back(f->quadrangles[i]);
         }
     }
     
@@ -673,6 +729,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
         GEdge *e = *it;
         
         std::vector<GEdge *> newModelHaveEdge(nparts, nullptr);
+        std::vector<GEdge *> globalModelHaveEdge(nparts, nullptr);
         
         //Lines
         for(unsigned int i = 0; i < e->lines.size(); i++)
@@ -683,14 +740,20 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteEdge *de = new discreteEdge(newModels[partition], newModels[partition]->getNumEdges()+1, nullptr, nullptr);
                 newModels[partition]->add(de);
                 newModelHaveEdge[partition] = de;
+                
+                discreteEdge *deGlobal = new discreteEdge(global, global->getNumEdges()+1, nullptr, nullptr);
+                global->add(deGlobal);
+                globalModelHaveEdge[partition] = deGlobal;
+                
                 if(maxDim == -1)
                 {
-                    maxDim = 1;
+                    maxDim = 2;
                 }
-                addPhysical(newModels[partition], de, gModel, e, partition, maxDim);
+                addPhysical(newModels[partition], de, gModel, e, global, deGlobal, partition, maxDim);
             }
             
             newModelHaveEdge[e->lines[i]->getPartition()]->lines.push_back(e->lines[i]);
+            globalModelHaveEdge[e->lines[i]->getPartition()]->lines.push_back(e->lines[i]);
         }
     }
     
@@ -700,6 +763,7 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
         GVertex *v = *it;
         
         std::vector<GVertex *> newModelHaveVertex(nparts, nullptr);
+        std::vector<GVertex *> globalModelHaveVertex(nparts, nullptr);
         
         for(unsigned int i = 0; i < v->points.size(); i++)
         {
@@ -709,14 +773,20 @@ std::vector<GModel*> createNewModels(GModel *gModel, int nparts)
                 discreteVertex *dv = new discreteVertex(newModels[partition], newModels[partition]->getNumVertices()+1);
                 newModels[partition]->add(dv);
                 newModelHaveVertex[partition] = dv;
+                
+                discreteVertex *dvGlobal = new discreteVertex(global, global->getNumVertices()+1);
+                global->add(dvGlobal);
+                globalModelHaveVertex[partition] = dvGlobal;
+                
                 if(maxDim == -1)
                 {
-                    maxDim = 0;
+                    maxDim = 2;
                 }
-                addPhysical(newModels[partition], dv, gModel, v, partition, maxDim);
+                addPhysical(newModels[partition], dv, gModel, v, global, dvGlobal, partition, maxDim);
             }
             
             newModelHaveVertex[v->points[i]->getPartition()]->points.push_back(v->points[i]);
+            globalModelHaveVertex[v->points[i]->getPartition()]->points.push_back(v->points[i]);
         }
     }
     
@@ -890,7 +960,7 @@ void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &mod
     }
 }
 
-void freeModels(std::vector<GModel*> &models)
+void freeModels(std::vector<GModel*> &models, GModel *global)
 {
     for(unsigned int i = 0; i < models.size(); i++)
     {
@@ -918,9 +988,33 @@ void freeModels(std::vector<GModel*> &models)
             }
         }
     }
+    
+    std::vector<GEntity*> entities;
+    global->getEntities(entities);
+    
+    for(unsigned int j = 0; j < entities.size(); j++)
+    {
+        switch(entities[j]->dim())
+        {
+            case 3:
+                global->remove(static_cast<GRegion*>(entities[j]));
+                break;
+            case 2:
+                global->remove(static_cast<GFace*>(entities[j]));
+                break;
+            case 1:
+                global->remove(static_cast<GEdge*>(entities[j]));
+                break;
+            case 0:
+                global->remove(static_cast<GVertex*>(entities[j]));
+                break;
+            default:
+                break;
+        }
+    }
 }
 
-void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition, int maxDim)
+void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, GModel *globalModel, GEntity *globalEntity, int partition, int maxDim)
 {
     std::vector<int> oldPhysical = oldEntity->getPhysicalEntities();
     std::string name;
@@ -933,8 +1027,12 @@ void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity
     
         const int number = oldModel->setPhysicalName(name, oldEntity->dim(), oldModel->getMaxPhysicalNumber(-1)+1);
         oldEntity->addPhysicalEntity(number);
+        
         newModel->setPhysicalName(name, newEntity->dim(), number);
         newEntity->addPhysicalEntity(number);
+        
+        globalModel->setPhysicalName(name, globalEntity->dim(), number);
+        globalEntity->addPhysicalEntity(number);
     }
     
     for(unsigned int i = 0; i < oldPhysical.size(); i++)
@@ -945,6 +1043,9 @@ void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity
         {
             newModel->setPhysicalName(name, newEntity->dim(), oldPhysical[i]);
             newEntity->addPhysicalEntity(oldPhysical[i]);
+            
+            globalModel->setPhysicalName(name, globalEntity->dim(), oldPhysical[i]);
+            globalEntity->addPhysicalEntity(oldPhysical[i]);
         }
     }
 }
