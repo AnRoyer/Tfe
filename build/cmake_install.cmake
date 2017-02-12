@@ -1,4 +1,4 @@
-# Install script for directory: /Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe
+# Install script for directory: /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

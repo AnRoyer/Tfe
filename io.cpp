@@ -143,6 +143,7 @@ void writeProFile(GModel* m, const int npart)
         }
         file << "}];" << std::endl;
     }
+    file << std::endl << std::endl;
     
     //D
     file << "\tD() = {";
@@ -208,7 +209,13 @@ void writeProFile(GModel* m, const int npart)
 
     file << "\t\tFor jj In {0:#myD~{i}()-1}" << std::endl;
     file << "\t\t\tj = myD~{i}(jj);" << std::endl;
-    file << "\t\t\ttag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);" << std::endl;
+    
+    file << "\t\t\tIf (#myD~{i}() == 1)" << std::endl;
+    file << "\t\t\t\ttag_g~{i}~{j} = D(i) * 1000 + D~{i};" << std::endl;
+    file << "\t\t\tElse" << std::endl;
+    file << "\t\t\t\ttag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);" << std::endl;
+    file << "\t\t\tEndIf" << std::endl;
+    
     file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl;
     file << "\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
     file << "\t\tEndFor" << std::endl;

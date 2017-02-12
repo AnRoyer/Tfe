@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/include/gmsh -I/Users/anthonyroyer/Documents/ULg/2eme_master/Tfe/github/Tfe/include/metis 
+CXX_INCLUDES = -I/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/include/gmsh -I/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/include/metis 
 
