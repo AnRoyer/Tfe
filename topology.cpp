@@ -284,14 +284,57 @@ void assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, 
     {
         ppf = *it;
     }
-    // to finish !!
-    if (me.getNumVertices() == 3)
+    
+    int numFace = 0;
+    for(unsigned int i = 0; i < v[0]->getNumFaces(); i++)
     {
-        ppf->triangles.push_back(new MTriangle(me.getVertex(0), me.getVertex(1), me.getVertex(2)));
+        const MFace e = v[0]->getFace(i);
+        if(e == me)
+        {
+            numFace = i;
+            break;
+        }
     }
-    else
+    
+    if(me.getNumVertices() == 3)
     {
-        ppf->quadrangles.push_back(new MQuadrangle(me.getVertex(0), me.getVertex(1), me.getVertex(2), me.getVertex(3)));
+        std::vector<MVertex*> verts;
+        v[0]->getFaceVertices(numFace, verts);
+        
+        if(verts.size() == 3)
+        {
+            ppf->triangles.push_back(new MTriangle(verts));
+        }
+        else if(verts.size() == 6)
+        {
+            ppf->triangles.push_back(new MTriangle6(verts));
+        }
+        else
+        {
+            ppf->triangles.push_back(new MTriangleN(verts, verts[0]->getPolynomialOrder()));
+        }
+    }
+    else if(me.getNumVertices() == 4)
+    {
+        std::vector<MVertex*> verts;
+        v[0]->getFaceVertices(numFace, verts);
+        
+        if(verts.size() == 4)
+        {
+            ppf->quadrangles.push_back(new MQuadrangle(verts));
+        }
+        else if(verts.size() == 8)
+        {
+            ppf->quadrangles.push_back(new MQuadrangle8(verts));
+        }
+        else if(verts.size() == 9)
+        {
+            ppf->quadrangles.push_back(new MQuadrangle9(verts));
+        }
+        else
+        {
+            ppf->quadrangles.push_back(new MQuadrangleN(verts, verts[0]->getPolynomialOrder()));
+        }
     }
 }
 
@@ -348,7 +391,35 @@ void assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, 
         ppe = *it;
     }
     
-    ppe->lines.push_back(new MLine(me.getVertex(0),me.getVertex(1)));
+    int numEdge = 0;
+    for(unsigned int i = 0; i < v[0]->getNumEdges(); i++)
+    {
+        const MEdge e = v[0]->getEdge(i);
+        if(e == me)
+        {
+            numEdge = i;
+            break;
+        }
+    }
+    
+    if(me.getNumVertices() == 2)
+    {
+        std::vector<MVertex*> verts;
+        v[0]->getEdgeVertices(numEdge, verts);
+        
+        if(verts.size() == 2)
+        {
+            ppe->lines.push_back(new MLine(verts));
+        }
+        else if(verts.size() == 3)
+        {
+            ppe->lines.push_back(new MLine3(verts));
+        }
+        else
+        {
+            ppe->lines.push_back(new MLineN(verts));
+        }
+    }
 }
 
 void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces)
