@@ -58,8 +58,9 @@ Function {
 			Else
 				tag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);
 			EndIf
+            Printf("Omega %g has tag %g with connection with Omega %g", i, tag_g~{i}~{j}, j);
 			ListOfFields() += tag_g~{i}~{j};
-			g_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };
+			g_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };
 		EndFor
 	EndFor
 }

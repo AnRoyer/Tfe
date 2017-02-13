@@ -14,6 +14,8 @@ Group{
 	Sigma_1 = Region[{8, 9}];
 	Sigma_2 = Region[{7, 8}];
 	Sigma_0 = Region[{7, 9}];
+
+
 	D() = {0, 1, 2};
 	N_DOM = #D();
 	D_0 = {1, 2};
@@ -28,7 +30,7 @@ Function {
 	myD_1 = {};
 	myD_2 = {};
 	ListOfFields = {};
-    ListOfConnectedFields = {};
+	ListOfConnectedFields = {};
 
 	For idom In {0:N_DOM-1}
 		If (idom % MPI_Size == MPI_Rank)
@@ -43,9 +45,13 @@ Function {
 		EndIf
 		For jj In {0:#myD~{i}()-1}
 			j = myD~{i}(jj);
-			tag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);
+			If (#myD~{i}() == 1)
+				tag_g~{i}~{j} = D(i) * 1000 + D~{i};
+			Else
+				tag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);
+			EndIf
 			ListOfFields() += tag_g~{i}~{j};
-			g_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };
+			g_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };
 		EndFor
 	EndFor
 }

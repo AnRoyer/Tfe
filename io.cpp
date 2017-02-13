@@ -217,7 +217,7 @@ void writeProFile(GModel* m, const int npart)
     file << "\t\t\tEndIf" << std::endl;
     
     file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl;
-    file << "\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    file << "\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
     file << "\t\tEndFor" << std::endl;
 
     file << "\tEndFor" << std::endl;

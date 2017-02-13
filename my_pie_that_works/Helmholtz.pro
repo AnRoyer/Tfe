@@ -435,7 +435,7 @@ PostOperation {
       { Name g_out~{i}~{j}; NameOfPostProcessing Sur~{i}~{j};
         Operation {
           Print[ g_out~{i}~{j}, OnElementsOf Sigma~{i}~{j},
-            StoreInField tag_g~{i}~{j}
+            StoreInField tag_g~{j}~{i}
             // File Sprintf("gg%g_%g.pos",i, j)
           ];
         }
