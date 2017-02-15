@@ -65,7 +65,8 @@ void writeProFile(GModel* m, const int npart)
     file << std::endl;
     
     //Sigma
-    std::unordered_map<int, std::vector<int> > listOfSigma;//map between tag of omega and the physical's numbers that corresponds
+    std::unordered_map<int, std::vector<int> > listOfSigma;//map between tag of sigma and the physical's numbers that corresponds
+    std::unordered_map<int, std::vector<int> > listOfBndSigma;//map between tag of sigma's boundary and the physical's numbers that corresponds
     for(GModel::piter it = m->firstPhysicalName(); it != m->lastPhysicalName(); ++it)
     {
         std::string name = it->second;
@@ -74,11 +75,23 @@ void writeProFile(GModel* m, const int npart)
         {
             std::vector<int> num = getNumFromString(name);
             
-            for(unsigned int i = 0; i < num.size(); i++)
+            if(num.size() < 3)
             {
-                std::vector<int> vec = listOfSigma[num[i]];
-                vec.push_back(it->first.second);
-                listOfSigma[num[i]] = vec;
+                for(unsigned int i = 0; i < num.size(); i++)
+                {
+                    std::vector<int> vec = listOfSigma[num[i]];
+                    vec.push_back(it->first.second);
+                    listOfSigma[num[i]] = vec;
+                }
+            }
+            else
+            {
+                for(unsigned int i = 0; i < num.size(); i++)
+                {
+                    std::vector<int> vec = listOfBndSigma[num[i]];
+                    vec.push_back(it->first.second);
+                    listOfBndSigma[num[i]] = vec;
+                }
             }
         }
     }
@@ -132,6 +145,63 @@ void writeProFile(GModel* m, const int npart)
     {
         std::vector<int> vec = it->second;
         file << "\tSigma_" << it->first << " = Region[{";
+        
+        for(unsigned int i = 0; i < vec.size(); i++)
+        {
+            if(i != 0)
+            {
+                file << ", ";
+            }
+            file << vec[i];
+        }
+        file << "}];" << std::endl;
+    }
+    file << std::endl;
+    //BndSigma_i_j
+    for(std::unordered_map<int, std::vector<int> >::iterator it = listOfBndSigma.begin(); it != listOfBndSigma.end(); ++it)
+    {
+        for(std::unordered_map<int, std::vector<int> >::iterator it2 = it; it2 != listOfBndSigma.end(); ++it2)
+        {
+            if(it != it2)
+            {
+                std::vector<int> vec1 = it->second;
+                std::vector<int> vec2 = it2->second;
+                std::vector<int>* vecCommun =  new std::vector<int>;
+                
+                if(communPhysicals(vec1, vec2, vecCommun))
+                {
+                    file << "\tBndSigma_" << it->first << "_" << it2->first << " = Region[{";
+                    for(unsigned int i = 0; i < vecCommun->size(); i++)
+                    {
+                        if(i != 0)
+                        {
+                            file << ", ";
+                        }
+                        file << (*vecCommun)[i];
+                    }
+                    file << "}];" << std::endl;
+                    
+                    file << "\tBndSigma_" << it2->first << "_" << it->first << " = Region[{";
+                    for(unsigned int i = 0; i < vecCommun->size(); i++)
+                    {
+                        if(i != 0)
+                        {
+                            file << ", ";
+                        }
+                        file << (*vecCommun)[i];
+                    }
+                    file << "}];" << std::endl;
+                }
+                delete vecCommun;
+            }
+        }
+    }
+    file << std::endl;
+    //BndSigma_i
+    for(std::unordered_map<int, std::vector<int> >::iterator it = listOfBndSigma.begin(); it != listOfBndSigma.end(); ++it)
+    {
+        std::vector<int> vec = it->second;
+        file << "\tBndSigma_" << it->first << " = Region[{";
         
         for(unsigned int i = 0; i < vec.size(); i++)
         {
@@ -217,7 +287,14 @@ void writeProFile(GModel* m, const int npart)
     file << "\t\t\tEndIf" << std::endl;
     
     file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl;
-    file << "\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    
+    file << "\t\t\tIf(ANALYSIS == 0)" << std::endl;
+    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    file << "\t\t\tEndIf" << std::endl;
+    file << "\t\t\tIf(ANALYSIS == 1)" << std::endl;
+    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    file << "\t\t\tEndIf" << std::endl;
+    
     file << "\t\tEndFor" << std::endl;
 
     file << "\tEndFor" << std::endl;
