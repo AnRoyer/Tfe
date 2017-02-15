@@ -96,7 +96,7 @@ void writeProFile(GModel* m, const int npart)
         }
     }
     file << std::endl;
-    //Sigma_i_j
+    //Sigma_i_j and BndSigma_i_j
     std::unordered_map<int, std::vector<int> > listOfNeighbour;//map between tag of omega and tag of neighbours
     for(std::unordered_map<int, std::vector<int> >::iterator it = listOfSigma.begin(); it != listOfSigma.end(); ++it)
     {
@@ -134,6 +134,60 @@ void writeProFile(GModel* m, const int npart)
                         file << (*vecCommun)[i];
                     }
                     file << "}];" << std::endl;
+                    
+                    if(listOfBndSigma.count(it->first) > 0)
+                    {
+                        std::vector<int> vec1 = listOfBndSigma[it->first];
+                        std::vector<int> vec2 = listOfBndSigma[it2->first];
+                        std::vector<int>* vecCommun =  new std::vector<int>;
+                        
+                        if(communPhysicals(vec1, vec2, vecCommun))
+                        {
+                            file << "\tBndSigma_" << it->first << "_" << it2->first << " = Region[{";
+                            for(unsigned int i = 0; i < vecCommun->size(); i++)
+                            {
+                                if(i != 0)
+                                {
+                                    file << ", ";
+                                }
+                                file << (*vecCommun)[i];
+                            }
+                            file << "}];" << std::endl;
+                            
+                            file << "\tBndSigma_" << it2->first << "_" << it->first << " = Region[{";
+                            for(unsigned int i = 0; i < vecCommun->size(); i++)
+                            {
+                                if(i != 0)
+                                {
+                                    file << ", ";
+                                }
+                                file << (*vecCommun)[i];
+                            }
+                            file << "}];" << std::endl;
+                        }
+                        else
+                        {
+                            file << "\tBndSigma_" << it->first << "_" << it2->first << " = Region[{}];" << std::endl;
+                            file << "\tBndSigma_" << it2->first << "_" << it->first << " = Region[{}];" << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        file << "\tBndSigma_" << it->first << "_" << it2->first << " = Region[{}];" << std::endl;
+                        file << "\tBndSigma_" << it2->first << "_" << it->first << " = Region[{}];" << std::endl;
+                    }
+                    
+                    file << "\tBndGammaInf_" << it->first << "_" << it2->first << " = Region[{}];" << std::endl;
+                    file << "\tBndGammaInf_" << it2->first << "_" << it->first << " = Region[{}];" << std::endl;
+                    
+                    file << "\tBndGammaD_" << it->first << "_" << it2->first << " = Region[{}];" << std::endl;
+                    file << "\tBndGammaD_" << it2->first << "_" << it->first << " = Region[{}];" << std::endl;
+                    
+                    file << "\tBndGammaInf_" << it->first << " = Region[{}];" << std::endl;
+                    file << "\tBndGammaInf_" << it2->first << " = Region[{}];" << std::endl;
+                    
+                    file << "\tBndGammaD_" << it->first << " = Region[{}];" << std::endl;
+                    file << "\tBndGammaD_" << it2->first << " = Region[{}];" << std::endl;
                 }
                 delete vecCommun;
             }
@@ -155,46 +209,6 @@ void writeProFile(GModel* m, const int npart)
             file << vec[i];
         }
         file << "}];" << std::endl;
-    }
-    file << std::endl;
-    //BndSigma_i_j
-    for(std::unordered_map<int, std::vector<int> >::iterator it = listOfBndSigma.begin(); it != listOfBndSigma.end(); ++it)
-    {
-        for(std::unordered_map<int, std::vector<int> >::iterator it2 = it; it2 != listOfBndSigma.end(); ++it2)
-        {
-            if(it != it2)
-            {
-                std::vector<int> vec1 = it->second;
-                std::vector<int> vec2 = it2->second;
-                std::vector<int>* vecCommun =  new std::vector<int>;
-                
-                if(communPhysicals(vec1, vec2, vecCommun))
-                {
-                    file << "\tBndSigma_" << it->first << "_" << it2->first << " = Region[{";
-                    for(unsigned int i = 0; i < vecCommun->size(); i++)
-                    {
-                        if(i != 0)
-                        {
-                            file << ", ";
-                        }
-                        file << (*vecCommun)[i];
-                    }
-                    file << "}];" << std::endl;
-                    
-                    file << "\tBndSigma_" << it2->first << "_" << it->first << " = Region[{";
-                    for(unsigned int i = 0; i < vecCommun->size(); i++)
-                    {
-                        if(i != 0)
-                        {
-                            file << ", ";
-                        }
-                        file << (*vecCommun)[i];
-                    }
-                    file << "}];" << std::endl;
-                }
-                delete vecCommun;
-            }
-        }
     }
     file << std::endl;
     //BndSigma_i

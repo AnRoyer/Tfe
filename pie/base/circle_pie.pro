@@ -19,25 +19,6 @@ Group {
     GammaD~{idom} = Region[{2}];
     GammaN~{idom} = Region[{}];
     GammaInf~{idom} = Region[{1}];
-
-    For jj In {0:N_DOM-1}
-        If(idom != jj)
-        BndGammaD~{idom}~{jj} = Region[{}];
-        BndGammaInf~{idom}~{jj} = Region[{}];
-        BndSigma~{idom}~{jj} = Region[{}];
-        EndIf
-    EndFor
-    BndGammaD~{idom}~{0} = Region[{}];
-    BndGammaD~{idom}~{1} = Region[{}];
-    BndGammaD~{idom} = Region[{}] ;
-
-    BndGammaInf~{idom}~{0} = Region[{}];
-    BndGammaInf~{idom}~{1} = Region[{}];
-    BndGammaInf~{idom} = Region[{}] ;
-
-    BndSigma~{idom}~{0} = Region[{}];
-    BndSigma~{idom}~{1} = Region[{}];
-    BndSigma~{idom} = Region[{}] ;
     EndFor
 }
 
