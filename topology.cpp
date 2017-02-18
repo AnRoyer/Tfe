@@ -1,6 +1,7 @@
 #include <iostream>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 #include "MElement.h"
@@ -39,9 +40,9 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
     std::set<partitionEdge*, Less_partitionEdge> pedges;
     std::set<partitionVertex*, Less_partitionVertex> pvertices;
     
-    std::multimap<MFace, MElement*, Less_Face> faceToElement;
-    std::multimap<MEdge, MElement*, Less_Edge> edgeToElement;
-    std::multimap<MVertex*, MElement*> vertexToElement;
+    std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> faceToElement;
+    std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge> edgeToElement;
+    std::unordered_map<MVertex*, std::vector<MElement*> > vertexToElement;
     
     //Create partition faces
     std::cout << "\tCreate partition faces... " << std::flush;
@@ -57,23 +58,10 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
             fillit_(faceToElement, (*it)->polyhedra.begin(), (*it)->polyhedra.end());
         }
         
-        std::multimap<MFace, MElement*, Less_Face>::iterator it = faceToElement.begin();
-        Equal_Face oper;
-        
-        while (it != faceToElement.end())
+        for(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face>::const_iterator it = faceToElement.begin(); it != faceToElement.end(); ++it)
         {
             MFace f = it->first;
-            std::vector<MElement*> voe;
-            
-            //Take all elements having f as face.
-            do {
-                voe.push_back(it->second);
-                ++it;
-                if (it ==  faceToElement.end())
-                {
-                    break;
-                }
-            }while (oper (f,it->first));
+            std::vector<MElement*> voe = it->second;
             
             assignPartitionBoundary(model, f, pfaces, voe);
         }
@@ -107,23 +95,11 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
             }
         }
         
-        std::multimap<MEdge, MElement*, Less_Edge>::iterator it = edgeToElement.begin();
-        Equal_Edge oper;
-        
-        //Take all elements having e as edge.
-        while (it != edgeToElement.end())
+        for(std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge>::const_iterator it = edgeToElement.begin(); it != edgeToElement.end(); ++it)
         {
             MEdge e = it->first;
-            std::vector<MElement*> voe;
             
-            do {
-                voe.push_back(it->second);
-                ++it;
-                if (it ==  edgeToElement.end())
-                {
-                    break;
-                }
-            }while (oper (e,it->first));
+            std::vector<MElement*> voe = it->second;
             
             assignPartitionBoundary(model, e, pedges, voe, pfaces);
         }
@@ -157,22 +133,10 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
             }
         }
         
-        std::multimap<MVertex*, MElement*>::iterator it = vertexToElement.begin();
-        
-        //Take all elements having v as vertex.
-        while (it != vertexToElement.end())
+        for(std::unordered_map<MVertex*, std::vector<MElement*> >::const_iterator it = vertexToElement.begin(); it != vertexToElement.end(); ++it)
         {
             MVertex *v = it->first;
-            std::vector<MElement*> voe;
-            
-            do {
-                voe.push_back(it->second);
-                ++it;
-                if (it ==  vertexToElement.end())
-                {
-                    break;
-                }
-            }while (v == it->first);
+            std::vector<MElement*> voe = it->second;
             
             assignPartitionBoundary(model, v, pvertices, voe, pedges, pfaces);
         }
@@ -200,7 +164,7 @@ int createPartitionBoundaries(GModel *model, bool createGhostCells)
 }
 
 template <class ITERATOR>
-void fillit_(std::multimap<MFace, MElement*, Less_Face> &faceToElement, ITERATOR it_beg, ITERATOR it_end)
+void fillit_(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> &faceToElement, ITERATOR it_beg, ITERATOR it_end)
 {
     for (ITERATOR IT = it_beg; IT != it_end ; ++IT)
     {
@@ -208,13 +172,13 @@ void fillit_(std::multimap<MFace, MElement*, Less_Face> &faceToElement, ITERATOR
         for(unsigned int j = 0; j < el->getNumFaces(); j++)
         {
             const MFace e = el->getFace(j);
-            faceToElement.insert(std::pair<MFace, MElement*>(e, el));
+            faceToElement[e].push_back(el);
         }
     }
 }
 
 template <class ITERATOR>
-void fillit_(std::multimap<MEdge, MElement*, Less_Edge> &edgeToElement, ITERATOR it_beg, ITERATOR it_end)
+void fillit_(std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge> &edgeToElement, ITERATOR it_beg, ITERATOR it_end)
 {
     for (ITERATOR IT = it_beg; IT != it_end; ++IT)
     {
@@ -222,13 +186,13 @@ void fillit_(std::multimap<MEdge, MElement*, Less_Edge> &edgeToElement, ITERATOR
         for(unsigned int j = 0; j < el->getNumEdges(); j++)
         {
             const MEdge e = el->getEdge(j);
-            edgeToElement.insert(std::pair<MEdge, MElement*>(e, el));
+            edgeToElement[e].push_back(el);
         }
     }
 }
 
 template <class ITERATOR>
-void fillit_(std::multimap<MVertex*, MElement*> &vertexToElement, ITERATOR it_beg, ITERATOR it_end)
+void fillit_(std::unordered_map<MVertex*, std::vector<MElement*> > &vertexToElement, ITERATOR it_beg, ITERATOR it_end)
 {
     for (ITERATOR IT = it_beg; IT != it_end ; ++IT)
     {
@@ -236,7 +200,7 @@ void fillit_(std::multimap<MVertex*, MElement*> &vertexToElement, ITERATOR it_be
         for(unsigned int j = 0; j < el->getNumVertices(); j++)
         {
             MVertex* e = el->getVertex(j);
-            vertexToElement.insert(std::pair<MVertex*, MElement*>(e, el));
+            vertexToElement[e].push_back(el);
         }
     }
 }
@@ -376,7 +340,7 @@ void assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, 
         return;
     }
     
-    partitionEdge pe  (model, 1, 0, 0, v2);
+    partitionEdge pe  (model, 1, nullptr, nullptr, v2);
     std::set<partitionEdge*, Less_partitionEdge>::iterator it = pedges.find(&pe);
     
     partitionEdge *ppe;
@@ -848,9 +812,10 @@ void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, 
 {
     for(ITERATOR it = it_beg; it != it_end; ++it)
     {
-        for(unsigned int j = 0; j < (*it)->getNumVertices(); j++)
+        const int numVertices = (*it)->getNumVertices();
+        for(unsigned int j = 0; j < numVertices; j++)
         {
-            if(vertexToEntity.count((*it)->getVertex(j)) > 0)
+            if(vertexToEntity.find((*it)->getVertex(j)) != vertexToEntity.end())
             {
                 if(vertexToEntity[(*it)->getVertex(j)]->dim() > entity->dim())
                 {

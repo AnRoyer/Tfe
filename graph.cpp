@@ -1,6 +1,4 @@
-#include <vector>
 #include <map>
-#include <iostream>
 
 #include "MElementCut.h"
 
@@ -21,19 +19,19 @@
 
 void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 {
-    std::multimap<int, int> elementsNodesMap;
+    std::multimap<int, int> nodesToElements;
 
     //Loop over regions
     for(GModel::riter it = gModel->firstRegion(); it != gModel->lastRegion(); ++it)
     {
         GRegion *r = *it;
     
-        fillElementsNodesMap(elementsNodesMap, r->tetrahedra.begin(), r->tetrahedra.end());
-        fillElementsNodesMap(elementsNodesMap, r->hexahedra.begin(), r->hexahedra.end());
-        fillElementsNodesMap(elementsNodesMap, r->prisms.begin(), r->prisms.end());
-        fillElementsNodesMap(elementsNodesMap, r->pyramids.begin(), r->pyramids.end());
-        fillElementsNodesMap(elementsNodesMap, r->trihedra.begin(), r->trihedra.end());
-        fillElementsNodesMap(elementsNodesMap, r->polyhedra.begin(), r->polyhedra.end());
+        fillNodesToElements(nodesToElements, r->tetrahedra.begin(), r->tetrahedra.end());
+        fillNodesToElements(nodesToElements, r->hexahedra.begin(), r->hexahedra.end());
+        fillNodesToElements(nodesToElements, r->prisms.begin(), r->prisms.end());
+        fillNodesToElements(nodesToElements, r->pyramids.begin(), r->pyramids.end());
+        fillNodesToElements(nodesToElements, r->trihedra.begin(), r->trihedra.end());
+        fillNodesToElements(nodesToElements, r->polyhedra.begin(), r->polyhedra.end());
     }
 
     //Loop over faces
@@ -41,9 +39,9 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GFace *f = *it;
 
-        fillElementsNodesMap(elementsNodesMap, f->triangles.begin(), f->triangles.end());
-        fillElementsNodesMap(elementsNodesMap, f->quadrangles.begin(), f->quadrangles.end());
-        fillElementsNodesMap(elementsNodesMap, f->polygons.begin(), f->polygons.end());
+        fillNodesToElements(nodesToElements, f->triangles.begin(), f->triangles.end());
+        fillNodesToElements(nodesToElements, f->quadrangles.begin(), f->quadrangles.end());
+        fillNodesToElements(nodesToElements, f->polygons.begin(), f->polygons.end());
     }
 
     //Loop over edges
@@ -51,7 +49,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GEdge *e = *it;
 
-        fillElementsNodesMap(elementsNodesMap, e->lines.begin(), e->lines.end());
+        fillNodesToElements(nodesToElements, e->lines.begin(), e->lines.end());
     }
 
     //Loop over vertices
@@ -59,21 +57,21 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     {
         GVertex *v = *it;
 
-        fillElementsNodesMap(elementsNodesMap, v->points.begin(), v->points.end());
+        fillNodesToElements(nodesToElements, v->points.begin(), v->points.end());
     }
 
     //create mesh format for METIS
-    int position = 0;
+    unsigned int position = 0;
     eptr[0] = 0;
-    int i = 0;
+    unsigned int i = 0;
     int itFirstLast = 0;
     
-    for(std::multimap<int, int>::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
+    for(std::multimap<int, int>::const_iterator it = nodesToElements.begin(); it != nodesToElements.end(); ++it)
     {
         if(itFirstLast != it->first+1)
         {
             metisToGmshIndex[i] = it->first + 1;
-            position += elementsNodesMap.count(it->first);
+            position += nodesToElements.count(it->first);
             eptr[i+1] = position;
             i++;
             itFirstLast = it->first+1;
@@ -81,8 +79,8 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
     }
 
     int *eindTemp = new int[position];
-    int positionInd = 0;
-    for(std::multimap<int, int>::iterator it = elementsNodesMap.begin(); it != elementsNodesMap.end(); ++it)
+    unsigned int positionInd = 0;
+    for(std::multimap<int, int>::const_iterator it = nodesToElements.begin(); it != nodesToElements.end(); ++it)
     {
         eindTemp[positionInd] = it->second;
         positionInd++;
@@ -91,7 +89,7 @@ void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex)
 }
 
 template <class ITERATOR>
-void fillElementsNodesMap(std::multimap<int, int> &elementsNodesMap, ITERATOR it_beg, ITERATOR it_end)
+void fillNodesToElements(std::multimap<int, int> &nodesToElements, ITERATOR it_beg, ITERATOR it_end)
 {
     for(ITERATOR it = it_beg; it != it_end; ++it)
     {
@@ -99,7 +97,7 @@ void fillElementsNodesMap(std::multimap<int, int> &elementsNodesMap, ITERATOR it
         
         for(unsigned int j = 0; j < (*it)->getNumVertices(); j++)
         {
-            elementsNodesMap.insert(std::pair<int, int>(tag,(*it)->getVertex(j)->getNum()-1));
+            nodesToElements.insert(std::pair<int, int>(tag,(*it)->getVertex(j)->getNum()-1));
         }
     }
 }

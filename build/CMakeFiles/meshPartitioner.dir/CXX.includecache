@@ -240,6 +240,8 @@ stdarg.h
 GmshConfig.h
 ../include/gmsh/GmshConfig.h
 
+../include/gmsh/Hash.h
+
 ../include/gmsh/MEdge.h
 functional
 -
@@ -247,6 +249,12 @@ MVertex.h
 ../include/gmsh/MVertex.h
 SVector3.h
 ../include/gmsh/SVector3.h
+
+../include/gmsh/MEdgeHash.h
+MEdge.h
+../include/gmsh/MEdge.h
+Hash.h
+../include/gmsh/Hash.h
 
 ../include/gmsh/MElement.h
 stdio.h
@@ -305,6 +313,12 @@ SVector3.h
 ../include/gmsh/SVector3.h
 GmshMessage.h
 ../include/gmsh/GmshMessage.h
+
+../include/gmsh/MFaceHash.h
+MFace.h
+../include/gmsh/MFace.h
+Hash.h
+../include/gmsh/Hash.h
 
 ../include/gmsh/MHexahedron.h
 MElement.h
@@ -623,11 +637,7 @@ inttypes.h
 -
 
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp
-vector
--
 map
--
-iostream
 -
 MElementCut.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/MElementCut.h
@@ -689,6 +699,10 @@ cstdlib
 -
 string
 -
+ctime
+-
+fstream
+-
 Gmsh.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/Gmsh.h
 GModel.h
@@ -710,6 +724,8 @@ iostream
 set
 -
 map
+-
+unordered_map
 -
 string
 -
@@ -763,4 +779,8 @@ partitionEdge.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/partitionEdge.h
 partitionVertex.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/partitionVertex.h
+MFaceHash.h
+/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/MFaceHash.h
+MEdgeHash.h
+/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/MEdgeHash.h
 

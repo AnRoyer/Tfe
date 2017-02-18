@@ -127,10 +127,13 @@ CMakeFiles/meshPartitioner.dir/main.cpp.o
  ../include/gmsh/GmshConfig.h
  ../include/gmsh/GmshDefines.h
  ../include/gmsh/GmshMessage.h
+ ../include/gmsh/Hash.h
  ../include/gmsh/MEdge.h
+ ../include/gmsh/MEdgeHash.h
  ../include/gmsh/MElement.h
  ../include/gmsh/MElementOctree.h
  ../include/gmsh/MFace.h
+ ../include/gmsh/MFaceHash.h
  ../include/gmsh/MLine.h
  ../include/gmsh/MQuadrangle.h
  ../include/gmsh/MTriangle.h
@@ -188,11 +191,14 @@ CMakeFiles/meshPartitioner.dir/topology.cpp.o
  ../include/gmsh/GmshConfig.h
  ../include/gmsh/GmshDefines.h
  ../include/gmsh/GmshMessage.h
+ ../include/gmsh/Hash.h
  ../include/gmsh/MEdge.h
+ ../include/gmsh/MEdgeHash.h
  ../include/gmsh/MElement.h
  ../include/gmsh/MElementCut.h
  ../include/gmsh/MElementOctree.h
  ../include/gmsh/MFace.h
+ ../include/gmsh/MFaceHash.h
  ../include/gmsh/MHexahedron.h
  ../include/gmsh/MLine.h
  ../include/gmsh/MPoint.h

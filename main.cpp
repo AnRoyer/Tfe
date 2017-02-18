@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <ctime>
+#include <fstream>
 
 #include "Gmsh.h"
 #include "GModel.h"
@@ -14,11 +16,6 @@
 
 int main(int argc, char **argv)
 {
-    if(argc < 2)
-    {
-        return 0;
-    }
-    
     std::cout << "#############################################################################" << std::endl;
     std::cout << "#                                                                           #" << std::endl;
     std::cout << "#                         #   #  #####   ####  #   #                        #" << std::endl;
@@ -35,6 +32,24 @@ int main(int argc, char **argv)
     std::cout << "#  #      #   #  #   #    #    ###    #    ###   ###   #  ##  #####  #   #  #" << std::endl;
     std::cout << "#                                                                           #" << std::endl;
     std::cout << "#############################################################################" << std::endl << std::endl;
+    
+    
+    if(argc < 2)
+    {
+        std::cout << "Arguments missing! Syntaxe :" << std::endl;
+        std::cout << argv[0] << " \"mesh.msh\" \"nbrPartitions\"" << std::endl;
+        return 0;
+    }
+    
+    if(atoi(argv[2]) < 2)
+    {
+        std::cout << "The number of partition must be greater than two!" << std::endl;
+        return 0;
+    }
+    
+    float temps;
+    clock_t t1, t2;
+    t1 = clock();
     
     GmshInitialize(argc, argv);
     GModel *m = new GModel();
@@ -93,12 +108,12 @@ int main(int argc, char **argv)
         m->getMeshElementByTag(metisToGmshIndex[i])->setPartition(epart[i]);
     }
     
-    std::cout << "Creating new GModel..." << std::flush;
+    std::cout << "Creating new GModel... " << std::flush;
     GModel* global = new GModel();
     std::vector<GModel*> models = createNewModels(m, global, nparts);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign mesh vertices to models..." << std::flush;
+    std::cout << "Assign mesh vertices to models... " << std::flush;
     for (unsigned int i = 0; i < nparts; i++)
     {
         assignMeshVerticesToModel(models[i]);
@@ -106,23 +121,23 @@ int main(int argc, char **argv)
     assignMeshVerticesToModel(global);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Creating new elements..." << std::endl;
+    std::cout << "Creating new elements... " << std::endl;
     createPartitionBoundaries(global, false);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Assign partition boundary to global model..." << std::flush;
+    std::cout << "Assign partition boundary to global model... " << std::flush;
     assignPartitionBoundariesToModels(global, models);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Writing partition meshes..." << std::flush;
+    std::cout << "Writing partition meshes... " << std::flush;
     writeModels(models);
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Writing global mesh..." << std::flush;
+    std::cout << "Writing global mesh... " << std::flush;
     global->writeMSH("global.msh");
     std::cout << "Done!" << std::endl;
     
-    std::cout << "Writing .pro file..." << std::flush;
+    std::cout << "Writing .pro file... " << std::flush;
     writeProFile(global, nparts);
     std::cout << "Done!" << std::endl;
     
@@ -132,6 +147,11 @@ int main(int argc, char **argv)
     delete[] eind;
     delete m;
     GmshFinalize();
+        
+    t2 = clock();
+    temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+    
+    std::cout << "-> Partition done in " << temps << "seconds" << std::endl;
     
     return 1;
 }

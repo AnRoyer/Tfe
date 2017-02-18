@@ -6,6 +6,6 @@
 
 void GModelToGraph(GModel* gModel, int* eptr, int** eind, int *metisToGmshIndex);
 template <class ITERATOR>
-void fillElementsNodesMap(std::multimap<int, int> &elementsNodesMap, ITERATOR it_beg, ITERATOR it_end);
+void fillNodesToElements(std::multimap<int, int> &nodesToElements, ITERATOR it_beg, ITERATOR it_end);
 
 #endif //GRAPH_INCLUDED
