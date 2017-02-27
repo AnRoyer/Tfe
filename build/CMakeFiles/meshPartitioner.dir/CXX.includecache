@@ -636,6 +636,12 @@ limits.h
 inttypes.h
 -
 
+../include/metis/parmetis.h
+mpi.h
+-
+metis.h
+-
+
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp
 map
 -
@@ -709,6 +715,10 @@ GModel.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/GModel.h
 MElement.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/MElement.h
+mpi.h
+-
+parmetis.h
+/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/parmetis.h
 metis.h
 /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/metis.h
 graph.h

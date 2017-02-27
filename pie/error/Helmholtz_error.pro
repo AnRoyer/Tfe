@@ -398,98 +398,95 @@ Formulation {
 }
 
 PostProcessing {
-  For ii In {0: #myD()-1}
-    i = myD(ii);
-    { Name Vol~{i}; NameOfFormulation Vol~{i};
-      PostQuantity {
-        { Name u~{i}; Value { Local { [ {u~{i}} ];
-              In Omega~{i}; Jacobian JVol; } } }
-	    { Name u_tot~{i}; Value { Local { [ {u~{i}} + uinc[] ];
-              In Omega~{i}; Jacobian JVol; } } }
-        { Name c~{i}; Value { Local { [ c[] ];
-              In Omega~{i}; Jacobian JVol; } } }
-        {Name u.exact~{i}; Value { Local { [{u.exact~{i}}] ;
-            In Omega~{i}; Jacobian JVol; }}}
-        {Name error~{i}; Value {Local { [Norm[{u.exact~{i}}-{u~{i}}]] ;
-            In Omega~{i}; Jacobian JVol; }}}
-        {Name ErreurC ;
-            Value {
-                Integral { Type Global ;
-                    [ (Norm[{u.exact~{i}}  - {u~{i}}])^2];
-                    In Omega~{i} ;
-                    Jacobian JVol ; Integration I1 ;
+    For ii In {0: #myD()-1}
+        i = myD(ii);
+        { Name Vol~{i}; NameOfFormulation Vol~{i};
+            PostQuantity {
+                { Name u~{i}; Value { Local { [ {u~{i}} ];
+                    In Omega~{i}; Jacobian JVol; } } }
+                { Name u_tot~{i}; Value { Local { [ {u~{i}} + uinc[] ];
+                    In Omega~{i}; Jacobian JVol; } } }
+                { Name c~{i}; Value { Local { [ c[] ];
+                    In Omega~{i}; Jacobian JVol; } } }
+                {Name u.exact~{i}; Value { Local { [{u.exact~{i}}] ;
+                    In Omega~{i}; Jacobian JVol; }}}
+                {Name error~{i}; Value {Local { [Norm[{u.exact~{i}}-{u~{i}}]] ;
+                    In Omega~{i}; Jacobian JVol; }}}
+                {Name ErreurC ;
+                    Value {
+                        Integral { Type Global ;
+                            [ (Norm[{u.exact~{i}}  - {u~{i}}])^2];
+                            In Omega~{i} ;
+                            Jacobian JVol ; Integration I1 ;
+                        }
+                    }
+                }
+                {Name Surface ;
+                    Value {
+                        Integral { Type Global ;
+                            [ (Norm[{u.exact~{i}}])^2];
+                            In Omega~{i} ;
+                            Jacobian JVol ; Integration I1 ;
+                        }
+                    }
                 }
             }
         }
-        {Name Surface ;
-            Value {
-                Integral { Type Global ;
-                    [ (Norm[{u.exact~{i}}])^2];
-                    In Omega~{i} ;
-                    Jacobian JVol ; Integration I1 ;
+        For jj In {0:#myD~{i}()-1}
+            j = myD~{i}(jj);
+            { Name Sur~{i}~{j}; NameOfFormulation Sur~{i}~{j};
+                PostQuantity {
+                    { Name g_out~{i}~{j}; Value { Local { [ {g_out~{i}~{j}} ];
+                        In Sigma~{i}~{j}; Jacobian JSur; } } }
                 }
             }
+            { Name g_copy~{i}~{j}; NameOfFormulation Sur~{i}~{j};
+                // name of formulation is used only for convenience; no data from that
+                // function space is actually used
+                PostQuantity {
+                    { Name g~{i}~{j}; Value {
+                        Local { [ $ArtificialSourceSGS~{j} ? g_in~{i}~{j}[] : 0. ];
+                            In Sigma~{i}~{j}; Jacobian JSur; } } }
+                }
+            }
+            EndFor
+            EndFor
         }
-        {Name Erreur; Value {Term { Type Global; [Sqrt[#1]/Sqrt[#2]] ;
-            In Omega~{i}; Jacobian JVol; }}}
-      }
-    }
-    For jj In {0:#myD~{i}()-1}
-    j = myD~{i}(jj);
-      { Name Sur~{i}~{j}; NameOfFormulation Sur~{i}~{j};
-	PostQuantity {
-          { Name g_out~{i}~{j}; Value { Local { [ {g_out~{i}~{j}} ];
-                In Sigma~{i}~{j}; Jacobian JSur; } } }
-	}
-      }
-      { Name g_copy~{i}~{j}; NameOfFormulation Sur~{i}~{j};
-        // name of formulation is used only for convenience; no data from that
-        // function space is actually used
-        PostQuantity {
-          { Name g~{i}~{j}; Value {
-              Local { [ $ArtificialSourceSGS~{j} ? g_in~{i}~{j}[] : 0. ];
-                In Sigma~{i}~{j}; Jacobian JSur; } } }
-	}
-      }
-    EndFor
-  EndFor
-}
-
-PostOperation {
-  For ii In {0: #myD()-1}
-    i = myD(ii);
-    { Name DDM~{i}; NameOfPostProcessing Vol~{i};
-      Operation {
-        Print[ u~{i}, OnElementsOf Omega~{i},
-          File StrCat(DIR, Sprintf("u_%g.pos",i))];
-        // Print[ u_tot~{i}, OnElementsOf Omega~{i},
-        //   File StrCat(DIR, Sprintf("u_tot_%g.pos",i))];
-	// // save velocity field
-	// Print[ c~{i}, OnElementsOf Omega~{i},
-        //   File StrCat(DIR, Sprintf("c_%g.pos",i))];
-        Print [u.exact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
-        Print [error~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("erreur_%g.pos",i))];
-        Print [ ErreurC[Omega~{i}], OnRegion Omega~{i}, Format Table, Store 1] ;
-        Print [ Surface[Omega~{i}], OnRegion Omega~{i}, Format Table, Store 2] ;
-        Print [ Erreur[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("erreur_%g.m",i))] ;
-      }
-    }
-    For jj In {0:#myD~{i}()-1}
-    j = myD~{i}(jj);
-      { Name g_out~{i}~{j}; NameOfPostProcessing Sur~{i}~{j};
-        Operation {
-          Print[ g_out~{i}~{j}, OnElementsOf Sigma~{i}~{j},
-            StoreInField tag_g~{j}~{i}
-            // File Sprintf("gg%g_%g.pos",i, j)
-          ];
-        }
-      }
-      { Name g_copy~{i}~{j}; NameOfPostProcessing g_copy~{i}~{j};
-        Operation {
-          Print[ g~{i}~{j}, OnElementsOf Sigma~{i}~{j},
-            StoreInField 4*N_DOM+(2*(i+N_DOM)-2+3*j)%(2*N_DOM)];
-        }
-      }
-    EndFor
-  EndFor
-}
+        
+        PostOperation {
+            For ii In {0: #myD()-1}
+                i = myD(ii);
+                { Name DDM~{i}; NameOfPostProcessing Vol~{i};
+                    Operation {
+                        Print[ u~{i}, OnElementsOf Omega~{i},
+                        File StrCat(DIR, Sprintf("u_%g.pos",i))];
+                        // Print[ u_tot~{i}, OnElementsOf Omega~{i},
+                        //   File StrCat(DIR, Sprintf("u_tot_%g.pos",i))];
+                        // // save velocity field
+                        // Print[ c~{i}, OnElementsOf Omega~{i},
+                        //   File StrCat(DIR, Sprintf("c_%g.pos",i))];
+                        Print [u.exact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
+                        Print [error~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("erreur_%g.pos",i))];
+                        Print [ ErreurC[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("erreurC_%g.m",i))] ;
+                        Print [ Surface[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("surface_%g.m",i))] ;
+                    }
+                }
+                For jj In {0:#myD~{i}()-1}
+                    j = myD~{i}(jj);
+                    { Name g_out~{i}~{j}; NameOfPostProcessing Sur~{i}~{j};
+                        Operation {
+                            Print[ g_out~{i}~{j}, OnElementsOf Sigma~{i}~{j},
+                            StoreInField tag_g~{j}~{i}
+                            // File Sprintf("gg%g_%g.pos",i, j)
+                            ];
+                        }
+                    }
+                    { Name g_copy~{i}~{j}; NameOfPostProcessing g_copy~{i}~{j};
+                        Operation {
+                            Print[ g~{i}~{j}, OnElementsOf Sigma~{i}~{j},
+                            StoreInField 4*N_DOM+(2*(i+N_DOM)-2+3*j)%(2*N_DOM)];
+                        }
+                    }
+                    EndFor
+                    EndFor
+                }

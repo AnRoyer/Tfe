@@ -40,12 +40,20 @@ Line Loop(10) = {2, 3, 4, 1};
 //+
 Plane Surface(11) = {9, 10};
 //+
-Physical Line("out") = {6, 5, 8, 7};
+Extrude {0, 0, 0.5} {
+  Surface{11};
+}
 //+
-Physical Line("int") = {2, 1, 4, 3};
+Physical Surface("out") = {24, 28, 32, 36};
 //+
-Physical Surface("surf") = {11};
+Physical Surface("int") = {40, 44, 48, 52};
 //+
-Transfinite Line {2, 1, 4, 3} = 15 Using Progression 1;
+Physical Surface("surf") = {11, 53};
 //+
-Transfinite Line {6, 5, 8, 7} = 75 Using Progression 1;
+Transfinite Line {2, 1, 4, 3, 17, 18, 19, 20} = 11 Using Progression 1;
+//+
+Transfinite Line {6, 5, 8, 7, 13, 14, 15, 16} = 55 Using Progression 1;
+//+
+Transfinite Line {23, 22, 31, 27, 43, 47, 38, 39} = 6 Using Progression 1;
+//+
+Physical Volume("vol") = {1};

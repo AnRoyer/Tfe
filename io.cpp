@@ -277,7 +277,7 @@ void writeProFile(GModel* m, const int npart)
     
     file << "\t\tIf (idom % MPI_Size == MPI_Rank)" << std::endl;
     
-    file << "\t\t\tmyD() += idom;" << std::endl;
+    file << "\t\t\tmyD() += D(idom);" << std::endl;
     file << "\t\t\tmyD~{idom} += D~{idom}();" << std::endl;
     
     file << "\t\tEndIf" << std::endl;
@@ -292,15 +292,13 @@ void writeProFile(GModel* m, const int npart)
     file << "\t\tEndIf" << std::endl;
 
     file << "\t\tFor jj In {0:#myD~{i}()-1}" << std::endl;
-    file << "\t\t\tj = myD~{i}(jj);" << std::endl;
+    file << "\t\t\tj = myD~{i}(jj);" << std::endl << std::endl;
     
-    file << "\t\t\tIf (#myD~{i}() == 1)" << std::endl;
-    file << "\t\t\t\ttag_g~{i}~{j} = D(i) * 1000 + D~{i};" << std::endl;
-    file << "\t\t\tElse" << std::endl;
-    file << "\t\t\t\ttag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);" << std::endl;
-    file << "\t\t\tEndIf" << std::endl;
+    file << "\t\t\ttag_g~{i}~{j} = i * 1000 + j;" << std::endl;
+    file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl << std::endl;
     
-    file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl;
+    file << "\t\t\ttag_g~{j}~{i} = j * 1000 + i;" << std::endl;
+    file << "\t\t\tListOfConnectedFields() += tag_g~{j}~{i};" << std::endl;
     
     file << "\t\t\tIf(ANALYSIS == 0)" << std::endl;
     file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;

@@ -165,6 +165,7 @@ CMakeFiles/meshPartitioner.dir/main.cpp.o: ../include/gmsh/partitionFace.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../include/gmsh/partitionVertex.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../include/gmsh/polynomialBasis.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../include/metis/metis.h
+CMakeFiles/meshPartitioner.dir/main.cpp.o: ../include/metis/parmetis.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../graph.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../io.h
 CMakeFiles/meshPartitioner.dir/main.cpp.o: ../main.cpp

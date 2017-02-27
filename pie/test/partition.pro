@@ -1,36 +1,24 @@
 Group{
-	Omega_3 = Region[{7}];
-	Omega_2 = Region[{6}];
-	Omega_1 = Region[{5}];
-	Omega_0 = Region[{4}];
+	Omega_2 = Region[{7}];
+	Omega_3 = Region[{6}];
+	Omega_0 = Region[{5}];
+	Omega_1 = Region[{4}];
 
 
-	Sigma_0_2 = Region[{10}];
 	Sigma_2_0 = Region[{10}];
-	BndSigma_0_2 = Region[{}];
-	BndSigma_2_0 = Region[{}];
-	BndGammaInf_0_2 = Region[{}];
+	Sigma_0_2 = Region[{10}];
+	BndSigma_2_0 = Region[{13}];
+	BndSigma_0_2 = Region[{13}];
 	BndGammaInf_2_0 = Region[{}];
-	BndGammaD_0_2 = Region[{}];
+	BndGammaInf_0_2 = Region[{}];
 	BndGammaD_2_0 = Region[{}];
-	BndGammaInf_0 = Region[{}];
+	BndGammaD_0_2 = Region[{}];
 	BndGammaInf_2 = Region[{}];
-	BndGammaD_0 = Region[{}];
-	BndGammaD_2 = Region[{}];
-	Sigma_0_1 = Region[{11}];
-	Sigma_1_0 = Region[{11}];
-	BndSigma_0_1 = Region[{}];
-	BndSigma_1_0 = Region[{}];
-	BndGammaInf_0_1 = Region[{}];
-	BndGammaInf_1_0 = Region[{}];
-	BndGammaD_0_1 = Region[{}];
-	BndGammaD_1_0 = Region[{}];
 	BndGammaInf_0 = Region[{}];
-	BndGammaInf_1 = Region[{}];
+	BndGammaD_2 = Region[{}];
 	BndGammaD_0 = Region[{}];
-	BndGammaD_1 = Region[{}];
-	Sigma_2_3 = Region[{9}];
-	Sigma_3_2 = Region[{9}];
+	Sigma_2_3 = Region[{12}];
+	Sigma_3_2 = Region[{12}];
 	BndSigma_2_3 = Region[{13}];
 	BndSigma_3_2 = Region[{13}];
 	BndGammaInf_2_3 = Region[{}];
@@ -41,22 +29,34 @@ Group{
 	BndGammaInf_3 = Region[{}];
 	BndGammaD_2 = Region[{}];
 	BndGammaD_3 = Region[{}];
-	Sigma_2_1 = Region[{12}];
-	Sigma_1_2 = Region[{12}];
-	BndSigma_2_1 = Region[{13}];
-	BndSigma_1_2 = Region[{13}];
-	BndGammaInf_2_1 = Region[{}];
-	BndGammaInf_1_2 = Region[{}];
-	BndGammaD_2_1 = Region[{}];
-	BndGammaD_1_2 = Region[{}];
-	BndGammaInf_2 = Region[{}];
+	Sigma_0_3 = Region[{11}];
+	Sigma_3_0 = Region[{11}];
+	BndSigma_0_3 = Region[{13}];
+	BndSigma_3_0 = Region[{13}];
+	BndGammaInf_0_3 = Region[{}];
+	BndGammaInf_3_0 = Region[{}];
+	BndGammaD_0_3 = Region[{}];
+	BndGammaD_3_0 = Region[{}];
+	BndGammaInf_0 = Region[{}];
+	BndGammaInf_3 = Region[{}];
+	BndGammaD_0 = Region[{}];
+	BndGammaD_3 = Region[{}];
+	Sigma_0_1 = Region[{9}];
+	Sigma_1_0 = Region[{9}];
+	BndSigma_0_1 = Region[{}];
+	BndSigma_1_0 = Region[{}];
+	BndGammaInf_0_1 = Region[{}];
+	BndGammaInf_1_0 = Region[{}];
+	BndGammaD_0_1 = Region[{}];
+	BndGammaD_1_0 = Region[{}];
+	BndGammaInf_0 = Region[{}];
 	BndGammaInf_1 = Region[{}];
-	BndGammaD_2 = Region[{}];
+	BndGammaD_0 = Region[{}];
 	BndGammaD_1 = Region[{}];
 	Sigma_3_1 = Region[{8}];
 	Sigma_1_3 = Region[{8}];
-	BndSigma_3_1 = Region[{13}];
-	BndSigma_1_3 = Region[{13}];
+	BndSigma_3_1 = Region[{}];
+	BndSigma_1_3 = Region[{}];
 	BndGammaInf_3_1 = Region[{}];
 	BndGammaInf_1_3 = Region[{}];
 	BndGammaD_3_1 = Region[{}];
@@ -66,22 +66,23 @@ Group{
 	BndGammaD_3 = Region[{}];
 	BndGammaD_1 = Region[{}];
 
-	Sigma_0 = Region[{10, 11}];
-	Sigma_2 = Region[{9, 10, 12}];
-	Sigma_3 = Region[{8, 9}];
-	Sigma_1 = Region[{8, 11, 12}];
+	Sigma_2 = Region[{10, 12}];
+	Sigma_0 = Region[{9, 10, 11}];
+	Sigma_3 = Region[{8, 11, 12}];
+	Sigma_1 = Region[{8, 9}];
 
+	BndSigma_1 = Region[{}];
 	BndSigma_3 = Region[{13}];
 	BndSigma_2 = Region[{13}];
-	BndSigma_1 = Region[{13}];
+	BndSigma_0 = Region[{13}];
 
 
 	D() = {0, 1, 2, 3};
 	N_DOM = #D();
-	D_3 = {2, 1};
-	D_1 = {0, 2, 3};
-	D_2 = {0, 3, 1};
-	D_0 = {2, 1};
+	D_1 = {0, 3};
+	D_3 = {2, 0, 1};
+	D_0 = {2, 3, 1};
+	D_2 = {0, 3};
 }
 
 
@@ -96,7 +97,7 @@ Function {
 
 	For idom In {0:N_DOM-1}
 		If (idom % MPI_Size == MPI_Rank)
-			myD() += idom;
+			myD() += D(idom);
 			myD~{idom} += D~{idom}();
 		EndIf
 	EndFor
@@ -107,12 +108,12 @@ Function {
 		EndIf
 		For jj In {0:#myD~{i}()-1}
 			j = myD~{i}(jj);
-			If (#myD~{i}() == 1)
-				tag_g~{i}~{j} = D(i) * 1000 + D~{i};
-			Else
-				tag_g~{i}~{j} = D(i) * 1000 + D~{i}(jj);
-			EndIf
+
+			tag_g~{i}~{j} = i * 1000 + j;
 			ListOfFields() += tag_g~{i}~{j};
+
+			tag_g~{j}~{i} = j * 1000 + i;
+			ListOfConnectedFields() += tag_g~{j}~{i};
 			If(ANALYSIS == 0)
 				g_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };
 			EndIf

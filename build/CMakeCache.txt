@@ -179,6 +179,9 @@ CMAKE_STRIP:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/Xcode
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Compile the parallel version
+Parallel:BOOL=OFF
+
 //Value Computed by CMake
 graphPartitioner_BINARY_DIR:STATIC=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build
 

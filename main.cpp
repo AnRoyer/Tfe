@@ -8,7 +8,12 @@
 #include "GModel.h"
 #include "MElement.h"
 
-#include "metis.h"
+#ifdef PARALLEL
+    #include <mpi.h>
+    #include "parmetis.h"
+#else
+    #include "metis.h"
+#endif
 
 #include "graph.h"
 #include "topology.h"
@@ -16,6 +21,17 @@
 
 int main(int argc, char **argv)
 {
+#ifdef PARALLEL
+        int nbproc, myrank;
+        MPI_Init(&argc,&argv);
+        MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+        MPI_Comm_size(MPI_COMM_WORLD, &nbproc);
+#endif
+    
+#ifdef PARALLEL
+    if(myrank == 0)
+    {
+#endif
     std::cout << "#############################################################################" << std::endl;
     std::cout << "#                                                                           #" << std::endl;
     std::cout << "#                         #   #  #####   ####  #   #                        #" << std::endl;
@@ -50,6 +66,9 @@ int main(int argc, char **argv)
     float temps;
     clock_t t1, t2;
     t1 = clock();
+#ifdef PARALLEL
+    }
+#endif
     
     GmshInitialize(argc, argv);
     GModel *m = new GModel();
@@ -68,6 +87,50 @@ int main(int argc, char **argv)
     GModelToGraph(m, eptr, &eind, metisToGmshIndex);
     std::cout << "Done!" << std::endl;
   
+#ifdef PARALLEL
+    std::cout << "Mesh partitioning... " << std::flush;
+    
+    idx_t *elmdist = new idx_t[nbproc+1];
+    elmdist[0] = 0;
+    for(unsigned int i = 1; i < nbproc; i++)
+    {
+        elmdist[i] = elmdist[i-1] + numElements/nbproc;
+    }
+    elmdist[nbproc] = numElements;
+    
+    idx_t objval;
+    idx_t *epart = new idx_t[numElements];
+    idx_t *npart = new idx_t[numVertices];
+    idx_t nparts = atoi(argv[2]);
+    idx_t ncommon = 3;
+    idx_t options[METIS_NOPTIONS];
+    METIS_SetDefaultOptions(options);
+    
+    const int error = ParMETIS_V3_PartMeshKway((idx_t*) elmdist, (idx_t*)eptr, (idx_t*)eind, NULL, NULL, 0, 0, &ncommon, &nparts, NULL, NULL, options, &objval, epart, MPI_COMM_WORLD);
+    
+    switch(error)
+    {
+        case METIS_OK:
+            std::cout << "Done!" << std::endl;
+            break;
+        case METIS_ERROR_INPUT:
+            std::cout << "Metis error (input)!" << std::endl;
+            return 0;
+            break;
+        case METIS_ERROR_MEMORY:
+            std::cout << "Metis error (memory)!" << std::endl;
+            return 0;
+            break;
+        case METIS_ERROR:
+            std::cout << "Metis error!" << std::endl;
+            return 0;
+            break;
+        default:
+            std::cout << "Error!" << std::endl;
+            return 0;
+            break;
+    }
+#else
     std::cout << "Mesh partitioning... " << std::flush;
   
     idx_t objval;
@@ -102,6 +165,7 @@ int main(int argc, char **argv)
             return 0;
             break;
     }
+#endif
 
     for(unsigned int i = 0; i < numElements; i++)
     {
@@ -147,11 +211,20 @@ int main(int argc, char **argv)
     delete[] eind;
     delete m;
     GmshFinalize();
-        
+    
+#ifdef PARALLEL
+    if(myrank == 0)
+    {
+#endif
     t2 = clock();
     temps = (float)(t2-t1)/CLOCKS_PER_SEC;
     
     std::cout << "-> Partition done in " << temps << "seconds" << std::endl;
+    
+#ifdef PARALLEL
+    }
+    MPI_Finalize();
+#endif
     
     return 1;
 }
