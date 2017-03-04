@@ -24,7 +24,8 @@ Integration {
 
 Function{
   DefineFunction[c];
-  For i In {0:N_DOM-1}
+  For ii In {0: #myD()-1}
+    i = myD(ii);
     If (i % MPI_Size == MPI_Rank)
       // g_in_c~{i}~{0}[Sigma~{i}~{0}] =
       //   (1 ? ComplexScalarField[XYZ[]]{4*N_DOM+2*i-2} : 0.);
@@ -50,7 +51,7 @@ Group{
   gPml = 1.;
 
   For ii In {0: #myD()-1}
-    i = D(ii);
+    i = myD(ii);
     DefineGroup[ GammaPoint~{i} ];
     TrOmegaGammaD~{i} = ElementsOf[ Omega~{i}, OnOneSideOf GammaD~{i} ];
     For jj In {0:#myD~{i}()-1}
@@ -176,7 +177,7 @@ Formulation {
             EndFor
           EndIf
         EndFor
-        { Name u.exact~{i} ; Type Local; NameOfSpace H_exact~{i};}
+        { Name u_exact~{i} ; Type Local; NameOfSpace H_exact~{i};}
       }
       Equation {
         // volume terms (D[] = E[] = 1 outside PMLs)
@@ -265,9 +266,9 @@ Formulation {
         Galerkin { [ betaBT[] * Dof{d u~{i}} , {d u~{i}} ];
           In GammaInf~{i}; Jacobian JSur; Integration I1; }
         
-        Galerkin{[Dof{u.exact~{i}}, {u.exact~{i}}] ;
+        Galerkin{[Dof{u_exact~{i}}, {u_exact~{i}}] ;
             In Omega~{i}; Jacobian JVol; Integration I1;}
-        Galerkin{[-uinc[],  {u.exact~{i}}] ;
+        Galerkin{[-uinc[],  {u_exact~{i}}] ;
             In Omega~{i}; Jacobian JVol; Integration I1;}
             }
     }
@@ -408,14 +409,14 @@ PostProcessing {
                     In Omega~{i}; Jacobian JVol; } } }
                 { Name c~{i}; Value { Local { [ c[] ];
                     In Omega~{i}; Jacobian JVol; } } }
-                {Name u.exact~{i}; Value { Local { [{u.exact~{i}}] ;
+                {Name u_exact~{i}; Value { Local { [{u_exact~{i}}] ;
                     In Omega~{i}; Jacobian JVol; }}}
-                {Name error~{i}; Value {Local { [Norm[{u.exact~{i}}-{u~{i}}]] ;
+                {Name error~{i}; Value {Local { [Norm[{u_exact~{i}}-{u~{i}}]] ;
                     In Omega~{i}; Jacobian JVol; }}}
                 {Name ErreurC ;
                     Value {
                         Integral { Type Global ;
-                            [ (Norm[{u.exact~{i}}  - {u~{i}}])^2];
+                            [ (Norm[{u_exact~{i}}  - {u~{i}}])^2];
                             In Omega~{i} ;
                             Jacobian JVol ; Integration I1 ;
                         }
@@ -424,7 +425,7 @@ PostProcessing {
                 {Name Surface ;
                     Value {
                         Integral { Type Global ;
-                            [ (Norm[{u.exact~{i}}])^2];
+                            [ (Norm[{u_exact~{i}}])^2];
                             In Omega~{i} ;
                             Jacobian JVol ; Integration I1 ;
                         }
@@ -450,14 +451,14 @@ PostProcessing {
                 }
             }
             EndFor
-            EndFor
-        }
+    EndFor
+}
         
-        PostOperation {
-            For ii In {0: #myD()-1}
-                i = myD(ii);
-                { Name DDM~{i}; NameOfPostProcessing Vol~{i};
-                    Operation {
+PostOperation {
+    For ii In {0: #myD()-1}
+        i = myD(ii);
+            { Name DDM~{i}; NameOfPostProcessing Vol~{i};
+                Operation {
                         Print[ u~{i}, OnElementsOf Omega~{i},
                         File StrCat(DIR, Sprintf("u_%g.pos",i))];
                         // Print[ u_tot~{i}, OnElementsOf Omega~{i},
@@ -465,7 +466,7 @@ PostProcessing {
                         // // save velocity field
                         // Print[ c~{i}, OnElementsOf Omega~{i},
                         //   File StrCat(DIR, Sprintf("c_%g.pos",i))];
-                        Print [u.exact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
+                        Print [u_exact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
                         Print [error~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("erreur_%g.pos",i))];
                         Print [ ErreurC[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("erreurC_%g.m",i))] ;
                         Print [ Surface[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("surface_%g.m",i))] ;
@@ -476,7 +477,7 @@ PostProcessing {
                     { Name g_out~{i}~{j}; NameOfPostProcessing Sur~{i}~{j};
                         Operation {
                             Print[ g_out~{i}~{j}, OnElementsOf Sigma~{i}~{j},
-                            StoreInField tag_g~{j}~{i}
+                            StoreInField tag_g~{i}~{j}
                             // File Sprintf("gg%g_%g.pos",i, j)
                             ];
                         }
@@ -487,6 +488,6 @@ PostProcessing {
                             StoreInField 4*N_DOM+(2*(i+N_DOM)-2+3*j)%(2*N_DOM)];
                         }
                     }
-                    EndFor
-                    EndFor
-                }
+                EndFor
+    EndFor
+}

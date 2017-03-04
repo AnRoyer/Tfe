@@ -37,12 +37,14 @@ Resolution {
       Call EnableArtificialSources;
 
       Evaluate[ $tt1 = GetWallClockTime[], $tt1c = GetCpuTime[] ];
-
+      
+      //MPI_Printf["ListOfFields = ", ListOfFields()];
+      //MPI_Printf["ListOfConnectedFields = ", ListOfConnectedFields()];
+      
       IterativeLinearSolver["I-A", SOLVER, TOL, MAXIT, RESTART,
-                            {ListOfFields()}, {ListOfConnectedFields()}, {}]
+        {ListOfFields()}, {ListOfConnectedFields()}, {}]
       {
         // compute local part of (A g^n) and stores the result in ListOfFields()
-
 	Evaluate[ $t1 = GetWallClockTime[], $t1c = GetCpuTime[] ];
 	
 	Call SolveVolumePDE;
@@ -123,7 +125,7 @@ Resolution {
       Call EnableArtificialSources;
       Call SolveVolumePDE;
       Call SaveVolumeSolutions;
-    
+
     }
   }
 }

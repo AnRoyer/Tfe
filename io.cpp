@@ -295,16 +295,17 @@ void writeProFile(GModel* m, const int npart)
     file << "\t\t\tj = myD~{i}(jj);" << std::endl << std::endl;
     
     file << "\t\t\ttag_g~{i}~{j} = i * 1000 + j;" << std::endl;
-    file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl << std::endl;
+    file << "\t\t\ttag_g~{j}~{i} = j * 1000 + i;" << std::endl << std::endl;
     
-    file << "\t\t\ttag_g~{j}~{i} = j * 1000 + i;" << std::endl;
+    file << "\t\t\tListOfFields() += tag_g~{i}~{j};" << std::endl;
+    file << "\t\t\tListOfConnectedFields() += 1;" << std::endl;
     file << "\t\t\tListOfConnectedFields() += tag_g~{j}~{i};" << std::endl;
     
     file << "\t\t\tIf(ANALYSIS == 0)" << std::endl;
-    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexScalarField[XYZ[]]{ tag_g~{j}~{i} };" << std::endl;
     file << "\t\t\tEndIf" << std::endl;
     file << "\t\t\tIf(ANALYSIS == 1)" << std::endl;
-    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{i}~{j} };" << std::endl;
+    file << "\t\t\t\tg_in~{i}~{j}[ Sigma~{i}~{j} ] = ComplexVectorField[XYZ[]]{ tag_g~{j}~{i} };" << std::endl;
     file << "\t\t\tEndIf" << std::endl;
     
     file << "\t\tEndFor" << std::endl;
