@@ -65,6 +65,13 @@ void writeProFile(GModel* m, const int npart)
     file << std::endl;
     
     //Sigma
+    if(npart == 1)
+    {
+        file << "\tSigma_0_0 = Region[{}];" << std::endl;
+        file << "\tBndSigma_0_0 =  Region[{}];" << std::endl;
+        file << "\tSigma_0 =  Region[{}];" << std::endl;
+        file << "\tD_0() = {0};" << std::endl;
+    }
     std::unordered_map<int, std::vector<int> > listOfSigma;//map between tag of sigma and the physical's numbers that corresponds
     std::unordered_map<int, std::vector<int> > listOfBndSigma;//map between tag of sigma's boundary and the physical's numbers that corresponds
     for(GModel::piter it = m->firstPhysicalName(); it != m->lastPhysicalName(); ++it)

@@ -1,0 +1,6 @@
+SOURCE = 1;
+TOP = 2;
+BOTTOM = 3;
+BORDER = 4;
+GROUND = 5;
+

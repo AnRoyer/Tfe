@@ -24,7 +24,8 @@ Integration {
 
 Function{
   DefineFunction[c];
-  For i In {0:N_DOM-1}
+  For ii In {0: #myD()-1}
+    i = myD(ii);
     If (i % MPI_Size == MPI_Rank)
       // g_in_c~{i}~{0}[Sigma~{i}~{0}] =
       //   (1 ? ComplexScalarField[XYZ[]]{4*N_DOM+2*i-2} : 0.);
@@ -50,7 +51,7 @@ Group{
   gPml = 1.;
 
   For ii In {0: #myD()-1}
-    i = D(ii);
+    i = myD(ii);
     DefineGroup[ GammaPoint~{i} ];
     TrOmegaGammaD~{i} = ElementsOf[ Omega~{i}, OnOneSideOf GammaD~{i} ];
     For jj In {0:#myD~{i}()-1}

@@ -1,1 +1,5 @@
-"*.msh"
+*.msh
+*.pos
+*.pre
+fvp.dat
+velocity.dat

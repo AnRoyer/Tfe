@@ -57,9 +57,9 @@ int main(int argc, char **argv)
         return 0;
     }
     
-    if(atoi(argv[2]) < 2)
+    if(atoi(argv[2]) < 1)
     {
-        std::cout << "The number of partition must be greater than two!" << std::endl;
+        std::cout << "The number of partition must be greater than zero!" << std::endl;
         return 0;
     }
     
@@ -70,6 +70,7 @@ int main(int argc, char **argv)
     }
 #endif
     
+    
     GmshInitialize(argc, argv);
     GModel *m = new GModel();
     std::cout << "Reading msh file... " << std::flush;
@@ -78,10 +79,16 @@ int main(int argc, char **argv)
 
     const int numElements = m->getNumMeshElements();
     const int numVertices = m->getNumMeshVertices();
-
+    
+    idx_t nparts = atoi(argv[2]);
+    idx_t *epart = new idx_t[numElements];
+    idx_t *npart = new idx_t[numVertices];
     int* eptr = new int[numElements+1];
     int* eind = NULL;
     int *metisToGmshIndex = new int[numElements];
+    
+    if(nparts > 1)
+    {
 
     std::cout << "Creating Metis structure... " << std::flush;
     GModelToGraph(m, eptr, &eind, metisToGmshIndex);
@@ -99,9 +106,6 @@ int main(int argc, char **argv)
     elmdist[nbproc] = numElements;
     
     idx_t objval;
-    idx_t *epart = new idx_t[numElements];
-    idx_t *npart = new idx_t[numVertices];
-    idx_t nparts = atoi(argv[2]);
     idx_t ncommon = 3;
     idx_t options[METIS_NOPTIONS];
     METIS_SetDefaultOptions(options);
@@ -171,6 +175,7 @@ int main(int argc, char **argv)
     {
         m->getMeshElementByTag(metisToGmshIndex[i])->setPartition(epart[i]);
     }
+    }
     
     std::cout << "Creating new GModel... " << std::flush;
     GModel* global = new GModel();
@@ -206,9 +211,12 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     freeModels(models, global);
-    
+
     delete[] eptr;
     delete[] eind;
+    delete[] epart;
+    delete[] npart;
+    delete[] metisToGmshIndex;
     delete m;
     GmshFinalize();
     
