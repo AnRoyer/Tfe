@@ -4,7 +4,11 @@ project(graphPartitioner)
 
 option(MPI "Compile the parallel version" OFF)
 
-file(GLOB FILES *.cpp)
+file(GLOB FILES main.cpp
+		io.cpp
+		graph.cpp
+		topology.cpp)
+file(GLOB FILESMPI)
 
 include_directories(include/gmsh)
 include_directories(include/metis)
@@ -21,6 +25,9 @@ if(MPI)
 	endif(MPI_FOUND)
 
 	add_definitions(-DPARALLEL)
+
+	file(GLOB FILESMPI main_mpi.cpp
+			   topology_mpi.cpp)
 else(MPI)
 	message("Sequential version")
 endif(MPI)
@@ -36,7 +43,7 @@ else(APPLE)
 endif(APPLE)
 
 
-add_executable(meshPartitioner ${FILES})
+add_executable(meshPartitioner ${FILES} ${FILESMPI})
 
 
 if(MPI)

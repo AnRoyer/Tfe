@@ -57,28 +57,28 @@ include CMakeFiles/meshPartitioner.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/meshPartitioner.dir/flags.make
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
-CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../graph.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/meshPartitioner.dir/graph.cpp.o"
-	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/graph.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp
+CMakeFiles/meshPartitioner.dir/main.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
+CMakeFiles/meshPartitioner.dir/main.cpp.o: ../main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/meshPartitioner.dir/main.cpp.o"
+	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/main.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/graph.cpp.i"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp > CMakeFiles/meshPartitioner.dir/graph.cpp.i
+CMakeFiles/meshPartitioner.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/main.cpp.i"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp > CMakeFiles/meshPartitioner.dir/main.cpp.i
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/graph.cpp.s"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp -o CMakeFiles/meshPartitioner.dir/graph.cpp.s
+CMakeFiles/meshPartitioner.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/main.cpp.s"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp -o CMakeFiles/meshPartitioner.dir/main.cpp.s
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires:
+CMakeFiles/meshPartitioner.dir/main.cpp.o.requires:
 
-.PHONY : CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
+.PHONY : CMakeFiles/meshPartitioner.dir/main.cpp.o.requires
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides: CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
-	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides.build
-.PHONY : CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides
+CMakeFiles/meshPartitioner.dir/main.cpp.o.provides: CMakeFiles/meshPartitioner.dir/main.cpp.o.requires
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.o.provides.build
+.PHONY : CMakeFiles/meshPartitioner.dir/main.cpp.o.provides
 
-CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/graph.cpp.o
+CMakeFiles/meshPartitioner.dir/main.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/main.cpp.o
 
 
 CMakeFiles/meshPartitioner.dir/io.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
@@ -105,57 +105,33 @@ CMakeFiles/meshPartitioner.dir/io.cpp.o.provides: CMakeFiles/meshPartitioner.dir
 CMakeFiles/meshPartitioner.dir/io.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/io.cpp.o
 
 
-CMakeFiles/meshPartitioner.dir/main.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
-CMakeFiles/meshPartitioner.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/meshPartitioner.dir/main.cpp.o"
-	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/main.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp
+CMakeFiles/meshPartitioner.dir/graph.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
+CMakeFiles/meshPartitioner.dir/graph.cpp.o: ../graph.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/meshPartitioner.dir/graph.cpp.o"
+	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/graph.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp
 
-CMakeFiles/meshPartitioner.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/main.cpp.i"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp > CMakeFiles/meshPartitioner.dir/main.cpp.i
+CMakeFiles/meshPartitioner.dir/graph.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/graph.cpp.i"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp > CMakeFiles/meshPartitioner.dir/graph.cpp.i
 
-CMakeFiles/meshPartitioner.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/main.cpp.s"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main.cpp -o CMakeFiles/meshPartitioner.dir/main.cpp.s
+CMakeFiles/meshPartitioner.dir/graph.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/graph.cpp.s"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/graph.cpp -o CMakeFiles/meshPartitioner.dir/graph.cpp.s
 
-CMakeFiles/meshPartitioner.dir/main.cpp.o.requires:
+CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires:
 
-.PHONY : CMakeFiles/meshPartitioner.dir/main.cpp.o.requires
+.PHONY : CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
 
-CMakeFiles/meshPartitioner.dir/main.cpp.o.provides: CMakeFiles/meshPartitioner.dir/main.cpp.o.requires
-	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.o.provides.build
-.PHONY : CMakeFiles/meshPartitioner.dir/main.cpp.o.provides
+CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides: CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides.build
+.PHONY : CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides
 
-CMakeFiles/meshPartitioner.dir/main.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/main.cpp.o
-
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../main_mpi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o"
-	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp > CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s"
-	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp -o CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires:
-
-.PHONY : CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
-	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides.build
-.PHONY : CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides
-
-CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o
+CMakeFiles/meshPartitioner.dir/graph.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/graph.cpp.o
 
 
 CMakeFiles/meshPartitioner.dir/topology.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
 CMakeFiles/meshPartitioner.dir/topology.cpp.o: ../topology.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/meshPartitioner.dir/topology.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/meshPartitioner.dir/topology.cpp.o"
 	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/topology.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/topology.cpp
 
 CMakeFiles/meshPartitioner.dir/topology.cpp.i: cmake_force
@@ -175,6 +151,30 @@ CMakeFiles/meshPartitioner.dir/topology.cpp.o.provides: CMakeFiles/meshPartition
 .PHONY : CMakeFiles/meshPartitioner.dir/topology.cpp.o.provides
 
 CMakeFiles/meshPartitioner.dir/topology.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/topology.cpp.o
+
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../main_mpi.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o"
+	mpic++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o -c /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp > CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s"
+	mpic++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/anthonyroyer/Documents/ULg/Tfe/github/Tfe/main_mpi.cpp -o CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires:
+
+.PHONY : CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides.build
+.PHONY : CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides
+
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.provides.build: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o
 
 
 CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o: CMakeFiles/meshPartitioner.dir/flags.make
@@ -203,21 +203,21 @@ CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o.provides.build: CMakeFiles/mes
 
 # Object files for target meshPartitioner
 meshPartitioner_OBJECTS = \
-"CMakeFiles/meshPartitioner.dir/graph.cpp.o" \
-"CMakeFiles/meshPartitioner.dir/io.cpp.o" \
 "CMakeFiles/meshPartitioner.dir/main.cpp.o" \
-"CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o" \
+"CMakeFiles/meshPartitioner.dir/io.cpp.o" \
+"CMakeFiles/meshPartitioner.dir/graph.cpp.o" \
 "CMakeFiles/meshPartitioner.dir/topology.cpp.o" \
+"CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o" \
 "CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o"
 
 # External object files for target meshPartitioner
 meshPartitioner_EXTERNAL_OBJECTS =
 
-../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/graph.cpp.o
-../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/io.cpp.o
 ../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/main.cpp.o
-../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o
+../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/io.cpp.o
+../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/graph.cpp.o
 ../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/topology.cpp.o
+../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o
 ../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o
 ../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/build.make
 ../bin/osx/meshPartitioner: CMakeFiles/meshPartitioner.dir/link.txt
@@ -229,11 +229,11 @@ CMakeFiles/meshPartitioner.dir/build: ../bin/osx/meshPartitioner
 
 .PHONY : CMakeFiles/meshPartitioner.dir/build
 
-CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
-CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/io.cpp.o.requires
 CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/main.cpp.o.requires
-CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
+CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/io.cpp.o.requires
+CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/graph.cpp.o.requires
 CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/topology.cpp.o.requires
+CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o.requires
 CMakeFiles/meshPartitioner.dir/requires: CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o.requires
 
 .PHONY : CMakeFiles/meshPartitioner.dir/requires

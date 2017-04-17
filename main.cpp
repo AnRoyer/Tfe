@@ -124,9 +124,10 @@ int main(int argc, char **argv)
     const int numElements = m->getNumMeshElements();
     const int numVertices = m->getNumMeshVertices();
     
+    idx_t nparts = atoi(argv[2]);
+    
     if(nparts > 1)
     {
-        idx_t nparts = atoi(argv[2]);
         idx_t *epart = new idx_t[numElements];
         idx_t *npart = new idx_t[numVertices];
         int* eptr = new int[numElements+1];

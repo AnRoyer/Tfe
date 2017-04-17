@@ -9,6 +9,7 @@
 #include "main_mpi.h"
 #include "graph.h"
 #include "topology.h"
+#include "topology_mpi.h"
 #include "io.h"
 
 using namespace PAR;
@@ -159,48 +160,44 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
     
     if(myPart.size() != 0)
     {
-        //Need to be code in MPI
-        if(myrank == 0)
+        if(myrank == 0) std::cout << "Creating new GModel... " << std::flush;
+        GModel* global = new GModel();
+        std::vector<GModel*> models = PAR::createNewModels(m, global, nparts, myPart);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+            
+        if(myrank == 0) std::cout << "Assign mesh vertices to models... " << std::flush;
+        for (unsigned int i = 0; i < myPart.size(); i++)
         {
-            std::cout << "Creating new GModel... " << std::flush;
-            GModel* global = new GModel();
-            std::vector<GModel*> models = SEQ::createNewModels(m, global, nparts);
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Assign mesh vertices to models... " << std::flush;
-            for (unsigned int i = 0; i < nparts; i++)
-            {
-                SEQ::assignMeshVerticesToModel(models[i]);
-            }
-            SEQ::assignMeshVerticesToModel(global);
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Creating new elements... " << std::endl;
-            SEQ::createPartitionBoundaries(global, false);
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Assign partition boundary to global model... " << std::flush;
-            SEQ::assignPartitionBoundariesToModels(global, models);
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Writing partition meshes... " << std::flush;
-            SEQ::writeModels(models);
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Writing global mesh... " << std::flush;
-            global->writeMSH("global.msh");
-            std::cout << "Done!" << std::endl;
-        
-            std::cout << "Writing .pro file... " << std::flush;
-            SEQ::writeProFile(global, nparts);
-            std::cout << "Done!" << std::endl;
-        
-            SEQ::freeModels(models, global);
+            SEQ::assignMeshVerticesToModel(models[i]);
         }
+        SEQ::assignMeshVerticesToModel(global);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+            
+        if(myrank == 0) std::cout << "Creating new elements... " << std::endl;
+        PAR::createPartitionBoundaries(global, false);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+            
+        if(myrank == 0) std::cout << "Assign partition boundary to global model... " << std::flush;
+        PAR::assignPartitionBoundariesToModels(global, models, myPart);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+            
+        if(myrank == 0) std::cout << "Writing partition meshes... " << std::flush;
+        SEQ::writeModels(models);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+        
+        if(myrank == 0) std::cout << "Writing global mesh... " << std::flush;
+        if(myrank == 0) global->writeMSH("global.msh");
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+        
+        if(myrank == 0) std::cout << "Writing .pro file... " << std::flush;
+        if(myrank == 0) SEQ::writeProFile(global, nparts);
+        if(myrank == 0) std::cout << "Done!" << std::endl;
+            
+        SEQ::freeModels(models, global);
     }
     else
     {
-        std::cout << "[rank " << myrank << "] Unused rank because nparts is smaller than nbproc!" << std::flush;
+        std::cout << "[rank " << myrank << "] Unused rank because nparts is smaller than nbproc!" << std::endl;
     }
     
     delete m;

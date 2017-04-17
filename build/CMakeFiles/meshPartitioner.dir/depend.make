@@ -242,6 +242,7 @@ CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../io.h
 CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../main_mpi.cpp
 CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../main_mpi.h
 CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../topology.h
+CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o: ../topology_mpi.h
 
 CMakeFiles/meshPartitioner.dir/topology.cpp.o: ../include/gmsh/BasisFactory.h
 CMakeFiles/meshPartitioner.dir/topology.cpp.o: ../include/gmsh/CGNSOptions.h
