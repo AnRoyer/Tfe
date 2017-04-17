@@ -8,7 +8,6 @@ file(GLOB FILES main.cpp
 		io.cpp
 		graph.cpp
 		topology.cpp)
-file(GLOB FILESMPI)
 
 include_directories(include/gmsh)
 include_directories(include/metis)
@@ -43,11 +42,10 @@ else(APPLE)
 endif(APPLE)
 
 
-add_executable(meshPartitioner ${FILES} ${FILESMPI})
-
-
 if(MPI)
-	target_link_libraries(meshPartitioner Gmsh lapack blas metis parmetis)
+	add_executable(meshPartitioner_mpi ${FILES} ${FILESMPI})
+	target_link_libraries(meshPartitioner_mpi Gmsh lapack blas metis parmetis)
 else(MPI)
+	add_executable(meshPartitioner ${FILES})
 	target_link_libraries(meshPartitioner Gmsh lapack blas metis)
 endif(MPI)

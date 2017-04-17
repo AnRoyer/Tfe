@@ -119,5 +119,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/meshPartitioner.dir/DependInfo.cmake"
+  "CMakeFiles/meshPartitioner_mpi.dir/DependInfo.cmake"
   )

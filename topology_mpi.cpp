@@ -75,7 +75,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->tetrahedra.push_back(r->tetrahedra[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -85,7 +85,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->tetrahedra.push_back(r->tetrahedra[i]);
+            if(global != nullptr) globalHaveRegion[partition]->tetrahedra.push_back(r->tetrahedra[i]);
         }
         
         
@@ -108,7 +108,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->hexahedra.push_back(r->hexahedra[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -118,7 +118,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->hexahedra.push_back(r->hexahedra[i]);
+            if(global != nullptr) globalHaveRegion[partition]->hexahedra.push_back(r->hexahedra[i]);
         }
         
         //Prisms
@@ -140,7 +140,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->prisms.push_back(r->prisms[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -150,7 +150,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->prisms.push_back(r->prisms[i]);
+            if(global != nullptr) globalHaveRegion[partition]->prisms.push_back(r->prisms[i]);
         }
         
         //Pyramids
@@ -172,7 +172,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->pyramids.push_back(r->pyramids[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -182,7 +182,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->pyramids.push_back(r->pyramids[i]);
+            if(global != nullptr) globalHaveRegion[partition]->pyramids.push_back(r->pyramids[i]);
         }
         
         //Trihedra
@@ -204,7 +204,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->trihedra.push_back(r->trihedra[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -214,7 +214,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->trihedra.push_back(r->trihedra[i]);
+            if(global != nullptr) globalHaveRegion[partition]->trihedra.push_back(r->trihedra[i]);
         }
         
         //Polyhedra
@@ -236,7 +236,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveRegion[partition]->polyhedra.push_back(r->polyhedra[i]);
             }
-            if(!globalHaveRegion[partition])
+            if(!globalHaveRegion[partition] && global != nullptr)
             {
                 discreteRegion *drGlobal = new discreteRegion(global, global->getNumRegions()+1);
                 global->add(drGlobal);
@@ -246,7 +246,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, drGlobal, gModel, r, partition, maxDim);
             }
             
-            globalHaveRegion[partition]->polyhedra.push_back(r->polyhedra[i]);
+            if(global != nullptr) globalHaveRegion[partition]->polyhedra.push_back(r->polyhedra[i]);
         }
     }
     
@@ -280,7 +280,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveFace[partition]->triangles.push_back(f->triangles[i]);
             }
-            if(!globalHaveFace[partition])
+            if(!globalHaveFace[partition] && global != nullptr)
             {
                 discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
                 global->add(dfGlobal);
@@ -293,7 +293,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, dfGlobal, gModel, f, partition, maxDim);
             }
             
-            globalHaveFace[partition]->triangles.push_back(f->triangles[i]);
+            if(global != nullptr) globalHaveFace[partition]->triangles.push_back(f->triangles[i]);
         }
         
         //Quadrangles
@@ -318,7 +318,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveFace[partition]->quadrangles.push_back(f->quadrangles[i]);
             }
-            if(!globalHaveFace[partition])
+            if(!globalHaveFace[partition] && global != nullptr)
             {
                 discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
                 global->add(dfGlobal);
@@ -331,7 +331,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, dfGlobal, gModel, f, partition, maxDim);
             }
             
-            globalHaveFace[partition]->quadrangles.push_back(f->quadrangles[i]);
+            if(global != nullptr) globalHaveFace[partition]->quadrangles.push_back(f->quadrangles[i]);
         }
         
         //Polygons
@@ -356,7 +356,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveFace[partition]->polygons.push_back(f->polygons[i]);
             }
-            if(!globalHaveFace[partition])
+            if(!globalHaveFace[partition] && global != nullptr)
             {
                 discreteFace *dfGlobal = new discreteFace(global, global->getNumFaces()+1);
                 global->add(dfGlobal);
@@ -369,7 +369,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, dfGlobal, gModel, f, partition, maxDim);
             }
             
-            globalHaveFace[partition]->polygons.push_back(f->polygons[i]);
+            if(global != nullptr) globalHaveFace[partition]->polygons.push_back(f->polygons[i]);
         }
     }
     
@@ -403,7 +403,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveEdge[partition]->lines.push_back(e->lines[i]);
             }
-            if(!globalHaveEdge[partition])
+            if(!globalHaveEdge[partition] && global != nullptr)
             {
                 discreteEdge *deGlobal = new discreteEdge(global, global->getNumEdges()+1, nullptr, nullptr);
                 global->add(deGlobal);
@@ -416,7 +416,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, deGlobal, gModel, e, partition, maxDim);
             }
             
-            globalHaveEdge[partition]->lines.push_back(e->lines[i]);
+            if(global != nullptr) globalHaveEdge[partition]->lines.push_back(e->lines[i]);
         }
     }
     
@@ -449,7 +449,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
             
                 newModelHaveVertex[partition]->points.push_back(v->points[i]);
             }
-            if(!globalHaveVertex[partition])
+            if(!globalHaveVertex[partition] && global != nullptr)
             {
                 discreteVertex *dvGlobal = new discreteVertex(global, global->getNumVertices()+1);
                 global->add(dvGlobal);
@@ -462,7 +462,7 @@ std::vector<GModel*> PAR::createNewModels(GModel *gModel, GModel *global, int np
                 addPhysical(global, dvGlobal, gModel, v, partition, maxDim);
             }
             
-            globalHaveVertex[partition]->points.push_back(v->points[i]);
+            if(global != nullptr) globalHaveVertex[partition]->points.push_back(v->points[i]);
         }
     }
     
@@ -510,7 +510,25 @@ void PAR::addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GE
 
 void PAR::assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models, std::vector<int> myPart)
 {
-    int maxNumPhysical = gModel->numPhysicalNames();
+    int nbproc, myrank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+    MPI_Comm_size(MPI_COMM_WORLD, &nbproc);
+    
+    int maxNumPhysical = 0;
+    if(myrank == 0)
+    {
+        maxNumPhysical = gModel->numPhysicalNames();
+        for(unsigned int k = 1; k < nbproc; k++)
+        {
+            MPI_Send(&maxNumPhysical, 1, MPI_INT, k, 3, MPI_COMM_WORLD);
+        }
+    }
+    else
+    {
+        MPI_Status status;
+        MPI_Recv(&maxNumPhysical, 1, MPI_INT, 0, 3, MPI_COMM_WORLD, &status);
+    }
+    //std::cout << "[rank " << myrank << "] " << maxNumPhysical << std::endl;
     
     //Loop over faces
     for(GModel::fiter it = gModel->firstFace(); it != gModel->lastFace(); ++it)

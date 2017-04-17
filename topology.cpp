@@ -962,6 +962,8 @@ void SEQ::freeModels(std::vector<GModel*> &models, GModel *global)
         }
     }
     
+    if(global == nullptr) return;
+        
     std::vector<GEntity*> entities;
     global->getEntities(entities);
     

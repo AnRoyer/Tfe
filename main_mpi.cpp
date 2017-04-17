@@ -19,7 +19,6 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
     GModel *m = new GModel();
     if(myrank == 0) std::cout << "Reading msh file... " << std::flush;
     m->readMSH(path.c_str());
-    MPI_Barrier(MPI_COMM_WORLD);
     if(myrank == 0) std::cout << "Done!" << std::endl;
     
     
@@ -152,7 +151,7 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
     std::vector<int> myPart;
     for(unsigned int i = 0; i < nparts; i++)
     {
-        if(i%nbproc == myrank)
+        if((i+1)%nbproc == myrank)
         {
             myPart.push_back(i);
         }
@@ -161,8 +160,9 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
     if(myPart.size() != 0)
     {
         if(myrank == 0) std::cout << "Creating new GModel... " << std::flush;
-        GModel* global = new GModel();
-        std::vector<GModel*> models = PAR::createNewModels(m, global, nparts, myPart);
+        GModel* global = nullptr;
+        if(myrank == 0) global = new GModel();
+        std::vector<GModel*> models = createNewModels(m, global, nparts, myPart);
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
         if(myrank == 0) std::cout << "Assign mesh vertices to models... " << std::flush;
@@ -170,15 +170,17 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
         {
             SEQ::assignMeshVerticesToModel(models[i]);
         }
-        SEQ::assignMeshVerticesToModel(global);
+        if(myrank == 0) SEQ::assignMeshVerticesToModel(global);
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
         if(myrank == 0) std::cout << "Creating new elements... " << std::endl;
-        PAR::createPartitionBoundaries(global, false);
+        if(myrank == 0) createPartitionBoundaries(global, false);
+        if(myrank != 0) createPartitionBoundaries(m, false);
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
         if(myrank == 0) std::cout << "Assign partition boundary to global model... " << std::flush;
-        PAR::assignPartitionBoundariesToModels(global, models, myPart);
+        if(myrank == 0) assignPartitionBoundariesToModels(global, models, myPart);
+        if(myrank != 0) assignPartitionBoundariesToModels(m, models, myPart);
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
         if(myrank == 0) std::cout << "Writing partition meshes... " << std::flush;
