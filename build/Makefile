@@ -204,6 +204,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+main_mpi.o: main_mpi.cpp.o
+
+.PHONY : main_mpi.o
+
+# target to build an object file
+main_mpi.cpp.o:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main_mpi.cpp.o
+.PHONY : main_mpi.cpp.o
+
+main_mpi.i: main_mpi.cpp.i
+
+.PHONY : main_mpi.i
+
+# target to preprocess a source file
+main_mpi.cpp.i:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main_mpi.cpp.i
+.PHONY : main_mpi.cpp.i
+
+main_mpi.s: main_mpi.cpp.s
+
+.PHONY : main_mpi.s
+
+# target to generate assembly for a file
+main_mpi.cpp.s:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main_mpi.cpp.s
+.PHONY : main_mpi.cpp.s
+
 topology.o: topology.cpp.o
 
 .PHONY : topology.o
@@ -231,6 +258,33 @@ topology.cpp.s:
 	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.s
 .PHONY : topology.cpp.s
 
+topology_mpi.o: topology_mpi.cpp.o
+
+.PHONY : topology_mpi.o
+
+# target to build an object file
+topology_mpi.cpp.o:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.o
+.PHONY : topology_mpi.cpp.o
+
+topology_mpi.i: topology_mpi.cpp.i
+
+.PHONY : topology_mpi.i
+
+# target to preprocess a source file
+topology_mpi.cpp.i:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.i
+.PHONY : topology_mpi.cpp.i
+
+topology_mpi.s: topology_mpi.cpp.s
+
+.PHONY : topology_mpi.s
+
+# target to generate assembly for a file
+topology_mpi.cpp.s:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology_mpi.cpp.s
+.PHONY : topology_mpi.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -249,9 +303,15 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... main_mpi.o"
+	@echo "... main_mpi.i"
+	@echo "... main_mpi.s"
 	@echo "... topology.o"
 	@echo "... topology.i"
 	@echo "... topology.s"
+	@echo "... topology_mpi.o"
+	@echo "... topology_mpi.i"
+	@echo "... topology_mpi.s"
 .PHONY : help
 
 

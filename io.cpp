@@ -12,7 +12,7 @@
 
 #include "io.h"
 
-void writeModels(std::vector<GModel*> &models)
+void SEQ::writeModels(std::vector<GModel*> &models)
 {
     for(unsigned int i = 0; i < models.size(); i++)
     {
@@ -24,7 +24,7 @@ void writeModels(std::vector<GModel*> &models)
     }
 }
 
-void writeProFile(GModel* m, const int npart)
+void SEQ::writeProFile(GModel* m, const int npart)
 {
     std::ofstream file("partition.pro", std::ofstream::trunc);
     
@@ -70,6 +70,10 @@ void writeProFile(GModel* m, const int npart)
         file << "\tSigma_0_0 = Region[{}];" << std::endl;
         file << "\tBndSigma_0_0 =  Region[{}];" << std::endl;
         file << "\tSigma_0 =  Region[{}];" << std::endl;
+        file << "\tBndGammaInf_0_0 = Region[{}];" << std::endl;
+        file << "\tBndGammaD_0_0 = Region[{}];" << std::endl;
+        file << "\tBndGammaInf_0 = Region[{}];" << std::endl;
+        file << "\tBndGammaD_0 = Region[{}];" << std::endl;
         file << "\tD_0() = {0};" << std::endl;
     }
     std::unordered_map<int, std::vector<int> > listOfSigma;//map between tag of sigma and the physical's numbers that corresponds
@@ -324,7 +328,7 @@ void writeProFile(GModel* m, const int npart)
     file.close();
 }
 
-std::vector<int> getNumFromString(std::string name)
+std::vector<int> SEQ::getNumFromString(std::string name)
 {
     std::vector<int> num;
     std::string currentNum;
@@ -346,7 +350,7 @@ std::vector<int> getNumFromString(std::string name)
     return num;
 }
 
-bool communPhysicals(const std::vector<int> vec1, const std::vector<int> vec2, std::vector<int>* vecCommun)
+bool SEQ::communPhysicals(const std::vector<int> vec1, const std::vector<int> vec2, std::vector<int>* vecCommun)
 {
     for(unsigned int i = 0; i < vec1.size(); i++)
     {

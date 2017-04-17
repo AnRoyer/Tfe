@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 
 project(graphPartitioner)
 
-option(Parallel "Compile the parallel version" OFF)
+option(MPI "Compile the parallel version" OFF)
 
 file(GLOB FILES *.cpp)
 
 include_directories(include/gmsh)
 include_directories(include/metis)
 
-if(Parallel)
+if(MPI)
 	message("Parallel version")
 
 	set(CMAKE_CXX_COMPILER "mpic++")
@@ -21,9 +21,9 @@ if(Parallel)
 	endif(MPI_FOUND)
 
 	add_definitions(-DPARALLEL)
-else(Parallel)
+else(MPI)
 	message("Sequential version")
-endif(Parallel)
+endif(MPI)
 
 if(APPLE)
 	message("OS X build")
@@ -39,8 +39,8 @@ endif(APPLE)
 add_executable(meshPartitioner ${FILES})
 
 
-if(Parallel)
-	target_link_libraries(meshPartitioner Gmsh lapack blas parmetis)
-else(Parallel)
+if(MPI)
+	target_link_libraries(meshPartitioner Gmsh lapack blas metis parmetis)
+else(MPI)
 	target_link_libraries(meshPartitioner Gmsh lapack blas metis)
-endif(Parallel)
+endif(MPI)

@@ -12,30 +12,32 @@
 #include "MFaceHash.h"
 #include "MEdgeHash.h"
 
-int createPartitionBoundaries(GModel *model, bool createGhostCells);
-
-template <class ITERATOR>
-void fillit_(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> &faceToElement, ITERATOR it_beg, ITERATOR it_end);
-template <class ITERATOR>
-void fillit_(std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge> &edgeToElement, ITERATOR it_beg, ITERATOR it_end);
-template <class ITERATOR>
-void fillit_(std::unordered_map<MVertex*, std::vector<MElement*> > &vertexToElement, ITERATOR it_beg, ITERATOR it_end);
-
-void assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<MElement*> &v);
-void assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::vector<MElement*> &v, std::set<partitionFace*, Less_partitionFace> &pfaces);
-void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces);
-
-std::vector<GModel*> createNewModels(GModel *gModel, GModel *global, int nparts);
-
-void assignMeshVerticesToModel(GModel *gModel);
-template <class ITERATOR>
-void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, GEntity* entity, ITERATOR it_beg, ITERATOR it_end);
-
-void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models);
-
-void freeModels(std::vector<GModel*> &models, GModel *global);
-
-void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, GModel *globalModel, GEntity *globalEntity, int partition, int maxDim);
+namespace SEQ {
+    int createPartitionBoundaries(GModel *model, bool createGhostCells);
+    
+    template <class ITERATOR>
+    void fillit_(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> &faceToElement, ITERATOR it_beg, ITERATOR it_end);
+    template <class ITERATOR>
+    void fillit_(std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge> &edgeToElement, ITERATOR it_beg, ITERATOR it_end);
+    template <class ITERATOR>
+    void fillit_(std::unordered_map<MVertex*, std::vector<MElement*> > &vertexToElement, ITERATOR it_beg, ITERATOR it_end);
+    
+    void assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<MElement*> &v);
+    void assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::vector<MElement*> &v, std::set<partitionFace*, Less_partitionFace> &pfaces);
+    void assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces);
+    
+    std::vector<GModel*> createNewModels(GModel *gModel, GModel *global, int nparts);
+    
+    void assignMeshVerticesToModel(GModel *gModel);
+    template <class ITERATOR>
+    void fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEntity, GEntity* entity, ITERATOR it_beg, ITERATOR it_end);
+    
+    void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models);
+    
+    void freeModels(std::vector<GModel*> &models, GModel *global);
+    
+    void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, GModel *globalModel, GEntity *globalEntity, int partition, int maxDim);
+}
 
 
 #endif //TOPOLOGY_INCLUDED

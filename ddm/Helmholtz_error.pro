@@ -177,7 +177,7 @@ Formulation {
             EndFor
           EndIf
         EndFor
-        { Name u.exact~{i} ; Type Local; NameOfSpace H_exact~{i};}
+        { Name uexact~{i} ; Type Local; NameOfSpace H_exact~{i};}
       }
       Equation {
         // volume terms (D[] = E[] = 1 outside PMLs)
@@ -266,9 +266,9 @@ Formulation {
         Galerkin { [ betaBT[] * Dof{d u~{i}} , {d u~{i}} ];
           In GammaInf~{i}; Jacobian JSur; Integration I1; }
         
-        Galerkin{[Dof{u.exact~{i}}, {u.exact~{i}}] ;
+        Galerkin{[Dof{uexact~{i}}, {uexact~{i}}] ;
             In Omega~{i}; Jacobian JVol; Integration I1;}
-        Galerkin{[-uinc[],  {u.exact~{i}}] ;
+        Galerkin{[-uinc[],  {uexact~{i}}] ;
             In Omega~{i}; Jacobian JVol; Integration I1;}
             }
     }
@@ -409,14 +409,14 @@ PostProcessing {
               In Omega~{i}; Jacobian JVol; } } }
         { Name c~{i}; Value { Local { [ c[] ];
               In Omega~{i}; Jacobian JVol; } } }
-        {Name u.exact~{i}; Value { Local { [{u.exact~{i}}] ;
+        {Name uexact~{i}; Value { Local { [{uexact~{i}}] ;
             In Omega~{i}; Jacobian JVol; }}}
-        {Name error~{i}; Value {Local { [Norm[{u.exact~{i}}-{u~{i}}]] ;
+        {Name error~{i}; Value {Local { [Norm[{uexact~{i}}-{u~{i}}]] ;
             In Omega~{i}; Jacobian JVol; }}}
         {Name ErreurC ;
             Value {
                 Integral { Type Global ;
-                    [ (Norm[{u.exact~{i}}  - {u~{i}}])^2];
+                    [ (Norm[{uexact~{i}}  - {u~{i}}])^2];
                     In Omega~{i} ;
                     Jacobian JVol ; Integration I1 ;
                 }
@@ -425,7 +425,7 @@ PostProcessing {
         {Name Surface ;
             Value {
                 Integral { Type Global ;
-                    [ (Norm[{u.exact~{i}}])^2];
+                    [ (Norm[{uexact~{i}}])^2];
                     In Omega~{i} ;
                     Jacobian JVol ; Integration I1 ;
                 }
@@ -468,11 +468,12 @@ PostOperation {
 	// // save velocity field
 	// Print[ c~{i}, OnElementsOf Omega~{i},
         //   File StrCat(DIR, Sprintf("c_%g.pos",i))];
-        Print [u.exact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
+        Print [uexact~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("u_exact_%g.pos",i))];
         Print [error~{i}, OnElementsOf Omega~{i}, File StrCat(DIR, Sprintf("erreur_%g.pos",i))];
         Print [ ErreurC[Omega~{i}], OnRegion Omega~{i}, Format Table, Store 1] ;
         Print [ Surface[Omega~{i}], OnRegion Omega~{i}, Format Table, Store 2] ;
         Print [ Erreur[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("erreur_%g.m",i))] ;
+        Print [ Surface[Omega~{i}], OnRegion Omega~{i}, Format Table, File StrCat(DIR, Sprintf("surface_%g.m",i))] ;
       }
     }
     For jj In {0:#myD~{i}()-1}

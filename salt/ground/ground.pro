@@ -9,12 +9,10 @@ ANALYSIS = {0, Name "Input/00Type of analysis", ReadOnly 1,
     Choices {0="Helmholtz", 1="Maxwell"}},
 // wavenumber
 // WAVENUMBER = {2*Pi*15, Name "Input/0Wavenumber"},
-FREQ = {7, Name "Input/0Frequency"},
+FREQ = 100,
 // LAMBDA = {2*Pi/WAVENUMBER, Name "Input/1Wavelength", ReadOnly 1},
 // number of points per wavelength
 N_LAMBDA = {20, Name "Input/2Points per wavelength"},
-// number of subdmains in the DDM
-N_DOM = {16, Name "Input/04Number of subdomains"},
 // base msh filename
 MSH_BASE_NAME = "mesh_",
 // directory for output files
