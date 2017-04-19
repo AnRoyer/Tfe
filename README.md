@@ -1,7 +1,7 @@
 # Compiler le mesh partitioner
 
 - Créer un répertoire "build" dans le dossier "Tfe".
-- Exécuter "cmake .." puis "make" (utiliser "cmake .. -DMPI=ON" pour compiler la version parallèle).
+- Exécuter "cmake .." puis "make" (utiliser "cmake .. -DMPI=ON" pour compiler la version parallèle). /!\ Due to recent modification it is not guarantee that the parallel version work.
 - L'exécutable se trouvera dans "Tfe/bin/osx" (ou "Tfe/bin/nic4" sur le cluster).
 
 # Exécuter "circle_pie"

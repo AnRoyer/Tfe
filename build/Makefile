@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named meshPartitioner_mpi
+# Target rules for targets named meshPartitioner
 
 # Build rule for target.
-meshPartitioner_mpi: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 meshPartitioner_mpi
-.PHONY : meshPartitioner_mpi
+meshPartitioner: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 meshPartitioner
+.PHONY : meshPartitioner
 
 # fast build rule for target.
-meshPartitioner_mpi/fast:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/build
-.PHONY : meshPartitioner_mpi/fast
+meshPartitioner/fast:
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/build
+.PHONY : meshPartitioner/fast
 
 graph.o: graph.cpp.o
 
@@ -129,7 +129,7 @@ graph.o: graph.cpp.o
 
 # target to build an object file
 graph.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/graph.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.o
 .PHONY : graph.cpp.o
 
 graph.i: graph.cpp.i
@@ -138,7 +138,7 @@ graph.i: graph.cpp.i
 
 # target to preprocess a source file
 graph.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/graph.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.i
 .PHONY : graph.cpp.i
 
 graph.s: graph.cpp.s
@@ -147,7 +147,7 @@ graph.s: graph.cpp.s
 
 # target to generate assembly for a file
 graph.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/graph.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/graph.cpp.s
 .PHONY : graph.cpp.s
 
 io.o: io.cpp.o
@@ -156,7 +156,7 @@ io.o: io.cpp.o
 
 # target to build an object file
 io.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/io.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/io.cpp.o
 .PHONY : io.cpp.o
 
 io.i: io.cpp.i
@@ -165,7 +165,7 @@ io.i: io.cpp.i
 
 # target to preprocess a source file
 io.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/io.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/io.cpp.i
 .PHONY : io.cpp.i
 
 io.s: io.cpp.s
@@ -174,7 +174,7 @@ io.s: io.cpp.s
 
 # target to generate assembly for a file
 io.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/io.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/io.cpp.s
 .PHONY : io.cpp.s
 
 main.o: main.cpp.o
@@ -183,7 +183,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -192,7 +192,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -201,35 +201,8 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/main.cpp.s
 .PHONY : main.cpp.s
-
-main_mpi.o: main_mpi.cpp.o
-
-.PHONY : main_mpi.o
-
-# target to build an object file
-main_mpi.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main_mpi.cpp.o
-.PHONY : main_mpi.cpp.o
-
-main_mpi.i: main_mpi.cpp.i
-
-.PHONY : main_mpi.i
-
-# target to preprocess a source file
-main_mpi.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main_mpi.cpp.i
-.PHONY : main_mpi.cpp.i
-
-main_mpi.s: main_mpi.cpp.s
-
-.PHONY : main_mpi.s
-
-# target to generate assembly for a file
-main_mpi.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/main_mpi.cpp.s
-.PHONY : main_mpi.cpp.s
 
 topology.o: topology.cpp.o
 
@@ -237,7 +210,7 @@ topology.o: topology.cpp.o
 
 # target to build an object file
 topology.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology.cpp.o
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.o
 .PHONY : topology.cpp.o
 
 topology.i: topology.cpp.i
@@ -246,7 +219,7 @@ topology.i: topology.cpp.i
 
 # target to preprocess a source file
 topology.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology.cpp.i
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.i
 .PHONY : topology.cpp.i
 
 topology.s: topology.cpp.s
@@ -255,35 +228,8 @@ topology.s: topology.cpp.s
 
 # target to generate assembly for a file
 topology.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology.cpp.s
+	$(MAKE) -f CMakeFiles/meshPartitioner.dir/build.make CMakeFiles/meshPartitioner.dir/topology.cpp.s
 .PHONY : topology.cpp.s
-
-topology_mpi.o: topology_mpi.cpp.o
-
-.PHONY : topology_mpi.o
-
-# target to build an object file
-topology_mpi.cpp.o:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology_mpi.cpp.o
-.PHONY : topology_mpi.cpp.o
-
-topology_mpi.i: topology_mpi.cpp.i
-
-.PHONY : topology_mpi.i
-
-# target to preprocess a source file
-topology_mpi.cpp.i:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology_mpi.cpp.i
-.PHONY : topology_mpi.cpp.i
-
-topology_mpi.s: topology_mpi.cpp.s
-
-.PHONY : topology_mpi.s
-
-# target to generate assembly for a file
-topology_mpi.cpp.s:
-	$(MAKE) -f CMakeFiles/meshPartitioner_mpi.dir/build.make CMakeFiles/meshPartitioner_mpi.dir/topology_mpi.cpp.s
-.PHONY : topology_mpi.cpp.s
 
 # Help Target
 help:
@@ -293,7 +239,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... meshPartitioner_mpi"
+	@echo "... meshPartitioner"
 	@echo "... graph.o"
 	@echo "... graph.i"
 	@echo "... graph.s"
@@ -303,15 +249,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... main_mpi.o"
-	@echo "... main_mpi.i"
-	@echo "... main_mpi.s"
 	@echo "... topology.o"
 	@echo "... topology.i"
 	@echo "... topology.s"
-	@echo "... topology_mpi.o"
-	@echo "... topology_mpi.i"
-	@echo "... topology_mpi.s"
 .PHONY : help
 
 

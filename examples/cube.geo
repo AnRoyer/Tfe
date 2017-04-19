@@ -42,7 +42,7 @@ Line(12) = {4, 8};
 //+
 Line Loop(13) = {1, 2, 3, 4};
 //+
-Plane Surface(14) = {13};
+Plane Surface(14) = -{13};
 //+
 Line Loop(15) = {5, 6, 7, 8};
 //+
@@ -50,19 +50,19 @@ Plane Surface(16) = {15};
 //+
 Line Loop(17) = {9, 5, -10, -1};
 //+
-Plane Surface(18) = {17};
+Plane Surface(18) = -{17};
 //+
 Line Loop(19) = {10, 6, -11, -2};
 //+
-Plane Surface(20) = {19};
+Plane Surface(20) = -{19};
 //+
 Line Loop(21) = {11, 7, -12, -3};
 //+
-Plane Surface(22) = {21};
+Plane Surface(22) = -{21};
 //+
 Line Loop(23) = {12, 8, -9, -4};
 //+
-Plane Surface(24) = {23};
+Plane Surface(24) = -{23};
 //+
 Surface Loop(25) = {14, 18, 24, 22, 20, 16};
 //+
@@ -74,18 +74,4 @@ Physical Surface("Surface") = {16, 18, 24, 20, 22, 14};
 //+
 Physical Volume("Volume") = {26};
 //+
-Transfinite Line {5, 8, 7, 6, 9, 1, 10, 4, 12, 11, 2, 3} = 101 Using Progression 1;
-//+
-Transfinite Surface {24};
-//+
-Transfinite Surface {14};
-//+
-Transfinite Surface {20};
-//+
-Transfinite Surface {16};
-//+
-Transfinite Surface {18};
-//+
-Transfinite Surface {22};
-//+
-Transfinite Volume{26} = {1, 2, 3, 4, 5, 6, 7, 8};
+Transfinite Line {5, 8, 7, 6, 9, 1, 10, 4, 12, 11, 2, 3} = 11 Using Progression 1;

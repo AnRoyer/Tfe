@@ -31,7 +31,7 @@
 
 #include "topology.h"
 
-int SEQ::createPartitionBoundaries(GModel *model, bool createGhostCells)
+int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, bool createGhostCells)
 {
     unsigned int numElem[6];
     const int meshDim = model->getNumMeshElements(numElem);
@@ -40,6 +40,10 @@ int SEQ::createPartitionBoundaries(GModel *model, bool createGhostCells)
     std::set<partitionEdge*, Less_partitionEdge> pedges;
     std::set<partitionVertex*, Less_partitionVertex> pvertices;
     
+    std::vector< std::set<partitionFace*, Less_partitionFace> > pfacesOfModels(models.size(), std::set<partitionFace*, Less_partitionFace>() );
+    std::vector< std::set<partitionEdge*, Less_partitionEdge> > pedgesOfModels(models.size(), std::set<partitionEdge*, Less_partitionEdge>() );
+    std::vector< std::set<partitionVertex*, Less_partitionVertex> > pverticesOfModels(models.size(), std::set<partitionVertex*, Less_partitionVertex>() );
+
     std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> faceToElement;
     std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, Equal_Edge> edgeToElement;
     std::unordered_map<MVertex*, std::vector<MElement*> > vertexToElement;
@@ -63,7 +67,7 @@ int SEQ::createPartitionBoundaries(GModel *model, bool createGhostCells)
             MFace f = it->first;
             std::vector<MElement*> voe = it->second;
             
-            assignPartitionBoundary(model, f, pfaces, voe);
+            assignPartitionBoundary(model, f, pfaces, voe, models, pfacesOfModels);
         }
     }
     std::cout << "Done!" << std::endl;
@@ -101,7 +105,7 @@ int SEQ::createPartitionBoundaries(GModel *model, bool createGhostCells)
             
             std::vector<MElement*> voe = it->second;
             
-            assignPartitionBoundary(model, e, pedges, voe, pfaces);
+            assignPartitionBoundary(model, e, pedges, voe, pfaces, models, pedgesOfModels);
         }
     }
     std::cout << "Done!" << std::endl;
@@ -146,7 +150,7 @@ int SEQ::createPartitionBoundaries(GModel *model, bool createGhostCells)
             MVertex *v = it->first;
             std::vector<MElement*> voe = it->second;
             
-            assignPartitionBoundary(model, v, pvertices, voe, pedges, pfaces);
+            assignPartitionBoundary(model, v, pvertices, voe, pedges, pfaces, models, pverticesOfModels);
         }
     }
     std::cout << "Done!" << std::endl;
@@ -213,7 +217,7 @@ void SEQ::fillit_(std::unordered_map<MVertex*, std::vector<MElement*> > &vertexT
     }
 }
 
-void SEQ::assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<MElement*> &v)
+void SEQ::assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<MElement*> &v, std::vector<GModel*> models, std::vector< std::set<partitionFace*, Less_partitionFace> > &pfacesOfModels)
 {
     std::vector<int> v2;
     v2.push_back(v[0]->getPartition());
@@ -242,15 +246,35 @@ void SEQ::assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFa
         return;
     }
     
+    const int numPhysical = model->numPhysicalNames()+1;
+    
     partitionFace pf(model, 1, v2);
     std::set<partitionFace*, Less_partitionFace>::iterator it = pfaces.find(&pf);
-    partitionFace *ppf;
     
+    partitionFace *ppf;
+     //Create the new partition entity for the global mesh
     if (it == pfaces.end())
     {
+        //Create new entity and add them to the global model
         ppf = new  partitionFace(model, -(int)pfaces.size()-1, v2);
         pfaces.insert(ppf);
         model->add(ppf);
+        
+        //Create its new physical name
+        ppf->addPhysicalEntity(numPhysical);
+        
+        std::string name = "_sigma{";
+        for(unsigned int j = 0; j < ppf->_partitions.size(); j++)
+        {
+            if(j > 0)
+            {
+                name += ",";
+            }
+            name += std::to_string(ppf->_partitions[j]);
+        }
+        name += "}";
+        
+        model->setPhysicalName(name, ppf->dim(), numPhysical);
     }
     else
     {
@@ -308,9 +332,106 @@ void SEQ::assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFa
             ppf->quadrangles.push_back(new MQuadrangleN(verts, verts[0]->getPolynomialOrder()));
         }
     }
+    
+    for(unsigned int i = 0; i < v2.size(); i++)
+    {
+        partitionFace pf(model, 1, v2);
+        std::set<partitionFace*, Less_partitionFace>::iterator it = pfacesOfModels[v2[i]].find(&pf);
+        
+        //Create the new partition entity for partitioned meshes
+        partitionFace *ppf;
+        if (it == pfacesOfModels[v2[i]].end())
+        {
+            //Create new entity and add them to partitioned models
+            ppf = new  partitionFace(models[v2[i]], -(int)pfacesOfModels[v2[i]].size()-1, v2);
+            pfacesOfModels[v2[i]].insert(ppf);
+            models[v2[i]]->add(ppf);
+            
+            //Create its new physical name
+            ppf->addPhysicalEntity(numPhysical);
+            
+            std::string name = "_sigma{";
+            for(unsigned int j = 0; j < ppf->_partitions.size(); j++)
+            {
+                if(j > 0)
+                {
+                    name += ",";
+                }
+                name += std::to_string(ppf->_partitions[j]);
+            }
+            name += "}";
+            
+            models[v2[i]]->setPhysicalName(name, ppf->dim(), numPhysical);
+        }
+        else
+        {
+            ppf = *it;
+        }
+        
+        int numEdge = 0;
+        int numElm = 0;
+        for(unsigned int j = 0; j < v.size(); j++)
+        {
+            if(v[j]->getPartition() == v2[i])
+            {
+                numElm = j;
+                for(unsigned int k = 0; k < v[j]->getNumFaces(); k++)
+                {
+                    const MFace e = v[j]->getFace(k);
+                    if(e == me)
+                    {
+                        numFace = k;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        
+        if(me.getNumVertices() == 3)
+        {
+            std::vector<MVertex*> verts;
+            v[numElm]->getFaceVertices(numFace, verts);
+            
+            if(verts.size() == 3)
+            {
+                ppf->triangles.push_back(new MTriangle(verts));
+            }
+            else if(verts.size() == 6)
+            {
+                ppf->triangles.push_back(new MTriangle6(verts));
+            }
+            else
+            {
+                ppf->triangles.push_back(new MTriangleN(verts, verts[0]->getPolynomialOrder()));
+            }
+        }
+        else if(me.getNumVertices() == 4)
+        {
+            std::vector<MVertex*> verts;
+            v[numElm]->getFaceVertices(numFace, verts);
+            
+            if(verts.size() == 4)
+            {
+                ppf->quadrangles.push_back(new MQuadrangle(verts));
+            }
+            else if(verts.size() == 8)
+            {
+                ppf->quadrangles.push_back(new MQuadrangle8(verts));
+            }
+            else if(verts.size() == 9)
+            {
+                ppf->quadrangles.push_back(new MQuadrangle9(verts));
+            }
+            else
+            {
+                ppf->quadrangles.push_back(new MQuadrangleN(verts, verts[0]->getPolynomialOrder()));
+            }
+        }
+    }
 }
 
-void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::vector<MElement*> &v, std::set<partitionFace*, Less_partitionFace> &pfaces)
+void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::vector<MElement*> &v, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<GModel*> models, std::vector< std::set<partitionEdge*, Less_partitionEdge> > &pedgesOfModels)
 {
     std::vector<int> v2;
     v2.push_back(v[0]->getPartition());
@@ -348,15 +469,35 @@ void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEd
         return;
     }
     
-    partitionEdge pe  (model, 1, nullptr, nullptr, v2);
+    const int numPhysical = model->numPhysicalNames()+1;
+    
+    partitionEdge pe(model, 1, nullptr, nullptr, v2);
     std::set<partitionEdge*, Less_partitionEdge>::iterator it = pedges.find(&pe);
     
     partitionEdge *ppe;
+    //Create the new partition entity for the global mesh
     if (it == pedges.end())
     {
+        //Create new entity and add them to the global model
         ppe = new  partitionEdge(model, -(int)pedges.size()-1, 0, 0, v2);
         pedges.insert(ppe);
         model->add(ppe);
+        
+        //Create its new physical name
+        ppe->addPhysicalEntity(numPhysical);
+        
+        std::string name = "_sigma{";
+        for(unsigned int j = 0; j < ppe->_partitions.size(); j++)
+        {
+            if(j > 0)
+            {
+                name += ",";
+            }
+            name += std::to_string(ppe->_partitions[j]);
+        }
+        name += "}";
+        
+        model->setPhysicalName(name, ppe->dim(), numPhysical);
     }
     else
     {
@@ -392,9 +533,84 @@ void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEd
             ppe->lines.push_back(new MLineN(verts));
         }
     }
+    
+    for(unsigned int i = 0; i < v2.size(); i++)
+    {
+        partitionEdge pe(models[v2[i]], 1, nullptr, nullptr, v2);
+        std::set<partitionEdge*, Less_partitionEdge>::iterator it = pedgesOfModels[v2[i]].find(&pe);
+        
+        //Create the new partition entity for partitioned meshes
+        partitionEdge *ppe;
+        if (it == pedgesOfModels[v2[i]].end())
+        {
+            //Create new entity and add them to partitioned models
+            ppe = new  partitionEdge(models[v2[i]], -(int)pedgesOfModels[v2[i]].size()-1, 0, 0, v2);
+            pedgesOfModels[v2[i]].insert(ppe);
+            models[v2[i]]->add(ppe);
+            
+            //Create its new physical name
+            ppe->addPhysicalEntity(numPhysical);
+            
+            std::string name = "_sigma{";
+            for(unsigned int j = 0; j < ppe->_partitions.size(); j++)
+            {
+                if(j > 0)
+                {
+                    name += ",";
+                }
+                name += std::to_string(ppe->_partitions[j]);
+            }
+            name += "}";
+            
+            models[v2[i]]->setPhysicalName(name, ppe->dim(), numPhysical);
+        }
+        else
+        {
+            ppe = *it;
+        }
+        
+        int numEdge = 0;
+        int numElm = 0;
+        for(unsigned int j = 0; j < v.size(); j++)
+        {
+            if(v[j]->getPartition() == v2[i])
+            {
+                numElm = j;
+                for(unsigned int k = 0; k < v[j]->getNumEdges(); k++)
+                {
+                    const MEdge e = v[j]->getEdge(k);
+                    if(e == me)
+                    {
+                        numEdge = k;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        
+        if(me.getNumVertices() == 2)
+        {
+            std::vector<MVertex*> verts;
+            v[numElm]->getEdgeVertices(numEdge, verts);
+            
+            if(verts.size() == 2)
+            {
+                ppe->lines.push_back(new MLine(verts));
+            }
+            else if(verts.size() == 3)
+            {
+                ppe->lines.push_back(new MLine3(verts));
+            }
+            else
+            {
+                ppe->lines.push_back(new MLineN(verts));
+            }
+        }
+    }
 }
 
-void SEQ::assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces)
+void SEQ::assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partitionVertex*, Less_partitionVertex> &pvertices, std::vector<MElement*> &v, std::set<partitionEdge*, Less_partitionEdge> &pedges, std::set<partitionFace*, Less_partitionFace> &pfaces, std::vector<GModel*> models, std::vector< std::set<partitionVertex*, Less_partitionVertex> > &pverticesOfModels)
 {
     std::vector<int> v2;
     v2.push_back(v[0]->getPartition());
@@ -440,16 +656,35 @@ void SEQ::assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partition
     {
         return;
     }
+
+    const int numPhysical = model->numPhysicalNames()+1;
     
     partitionVertex pv(model, 1, v2);
     std::set<partitionVertex*, Less_partitionVertex>::iterator it = pvertices.find(&pv);
     
     partitionVertex *ppv;
+    //Create the new partition entity for the global mesh
     if (it == pvertices.end())
     {
-        ppv = new  partitionVertex(model, -(int)pvertices.size()-1,v2);
+        ppv = new partitionVertex(model, -(int)pvertices.size()-1,v2);
         pvertices.insert (ppv);
         model->add(ppv);
+        
+        //Create its new physical name
+        ppv->addPhysicalEntity(numPhysical);
+        
+        std::string name = "_sigma{";
+        for(unsigned int j = 0; j < ppv->_partitions.size(); j++)
+        {
+            if(j > 0)
+            {
+                name += ",";
+            }
+            name += std::to_string(ppv->_partitions[j]);
+        }
+        name += "}";
+        
+        model->setPhysicalName(name, ppv->dim(), numPhysical);
     }
     else
     {
@@ -457,6 +692,43 @@ void SEQ::assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partition
     }
     
     ppv->points.push_back(new MPoint(ve));
+    
+    for(unsigned int i = 0; i < v2.size(); i++)
+    {
+        partitionVertex pv(model, 1, v2);
+        std::set<partitionVertex*, Less_partitionVertex>::iterator it = pverticesOfModels[v2[i]].find(&pv);
+        
+        partitionVertex *ppv;
+        //Create the new partition entity for the global mesh
+        if (it == pverticesOfModels[v2[i]].end())
+        {
+            ppv = new partitionVertex(model, -(int)pverticesOfModels[v2[i]].size()-1,v2);
+            pverticesOfModels[v2[i]].insert (ppv);
+            models[v2[i]]->add(ppv);
+            
+            //Create its new physical name
+            ppv->addPhysicalEntity(numPhysical);
+            
+            std::string name = "_sigma{";
+            for(unsigned int j = 0; j < ppv->_partitions.size(); j++)
+            {
+                if(j > 0)
+                {
+                    name += ",";
+                }
+                name += std::to_string(ppv->_partitions[j]);
+            }
+            name += "}";
+            
+            models[v2[i]]->setPhysicalName(name, ppv->dim(), numPhysical);
+        }
+        else
+        {
+            ppv = *it;
+        }
+        
+        ppv->points.push_back(new MPoint(ve));
+    }
 }
 
 std::vector<GModel*> SEQ::createNewModels(GModel *gModel, GModel *global, int nparts)
@@ -833,101 +1105,6 @@ void SEQ::fillVertexToEntity(std::unordered_map<MVertex*, GEntity*> &vertexToEnt
             else
             {
                 vertexToEntity[(*it)->getVertex(j)] = entity;
-            }
-        }
-    }
-}
-
-void SEQ::assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models)
-{
-    int maxNumPhysical = gModel->numPhysicalNames();
-    
-    //Loop over faces
-    for(GModel::fiter it = gModel->firstFace(); it != gModel->lastFace(); ++it)
-    {
-        GFace *f = *it;
-        
-        if(f->geomType() == GEntity::PartitionSurface)
-        {
-            maxNumPhysical++;
-            f->addPhysicalEntity(maxNumPhysical);
-            
-            std::string name = "_sigma{";
-            for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
-            {
-                if(j > 0)
-                {
-                    name += ",";
-                }
-                name += std::to_string(static_cast<partitionFace*>(f)->_partitions[j]);
-            }
-            name += "}";
-            
-            for(unsigned int j = 0; j < static_cast<partitionFace*>(f)->_partitions.size(); j++)
-            {
-                models[static_cast<partitionFace*>(f)->_partitions[j]]->add(f);
-                models[static_cast<partitionFace*>(f)->_partitions[j]]->setPhysicalName(name, f->dim(), maxNumPhysical);
-                gModel->setPhysicalName(name, f->dim(), maxNumPhysical);
-            }
-        }
-    }
-    
-    //Loop over edges
-    for(GModel::eiter it = gModel->firstEdge(); it != gModel->lastEdge(); ++it)
-    {
-        GEdge *e = *it;
-        
-        if(e->geomType() == GEntity::PartitionCurve)
-        {
-            maxNumPhysical++;
-            e->addPhysicalEntity(maxNumPhysical);
-            
-            std::string name = "_sigma{";
-            for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
-            {
-                if(j > 0)
-                {
-                    name += ",";
-                }
-                name += std::to_string(static_cast<partitionEdge*>(e)->_partitions[j]);
-            }
-            name += "}";
-            
-            for(unsigned int j = 0; j < static_cast<partitionEdge*>(e)->_partitions.size(); j++)
-            {
-                models[static_cast<partitionEdge*>(e)->_partitions[j]]->add(e);
-                models[static_cast<partitionEdge*>(e)->_partitions[j]]->setPhysicalName(name, e->dim(), maxNumPhysical);
-                gModel->setPhysicalName(name, e->dim(), maxNumPhysical);
-            }
-        }
-    }
-    
-    //Loop over vertices
-    for(GModel::viter it = gModel->firstVertex(); it != gModel->lastVertex(); ++it)
-    {
-        GVertex *v = *it;
-        
-        if(v->geomType() == GEntity::PartitionVertex)
-        {
-            maxNumPhysical++;
-            v->addPhysicalEntity(maxNumPhysical);
-            
-            std::string name = "_sigma{";
-            for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
-            {
-                if(j > 0)
-                {
-                    name += ",";
-                }
-                name += std::to_string(static_cast<partitionVertex*>(v)->_partitions[j]);
-            }
-            name += "}";
-            
-            for(unsigned int j = 0; j < static_cast<partitionVertex*>(v)->_partitions.size(); j++)
-            {
-                models[static_cast<partitionVertex*>(v)->_partitions[j]]->add(v);
-                models[static_cast<partitionVertex*>(v)->_partitions[j]]->setPhysicalName(name, v->dim(), maxNumPhysical);
-                gModel->setPhysicalName(name, v->dim(), maxNumPhysical);
             }
         }
     }

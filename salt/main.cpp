@@ -27,126 +27,47 @@ int main(int argc, char** argv)
     
     std::ofstream fileData("velocity.dat");
     
-    if(param.sliceX)
-    {
-        fileData << n2 << " " << n3 << std::endl;
-    }
-    else if(param.sliceY)
-    {
-        fileData << n1 << " " << n3 << std::endl;
-    }
-    else if(param.sliceZ)
-    {
-        fileData << n1 << " " << n2 << std::endl;
-    }
-    else
-    {
-        fileData << n1 << " " << n2 << " " << n3 << std::endl;
-    }
-    
     float h = 0.02;
     if(param.sliceX)
     {
+        //x y
+        fileData << n2 << " " << n1 << std::endl;
+        //list x
         for(unsigned int i = 0; i < n2; i++)
         {
             fileData << i*h << " ";
         }
         fileData << std::endl;
         
-        for(unsigned int i = 0; i < n3; i++)
+        //list y
+        for(int i = 0; i < n1; i++)
         {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
-    }
-    else if(param.sliceY)
-    {
-        for(unsigned int i = 0; i < n1; i++)
-        {
-            fileData << i*h << " ";
+            fileData << -i*h << " ";
         }
         fileData << std::endl;
         
-        for(unsigned int i = 0; i < n3; i++)
-        {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
-    }
-    else if(param.sliceZ)
-    {
+        const int x = param.x;
         for(unsigned int i = 0; i < n1; i++)
         {
-            fileData << i*h << " ";
+            for(unsigned int j = 0; j < n2; j++)
+            {
+                //fileData << vp[] << " ";
+            }
         }
-        fileData << std::endl;
-        
-        for(unsigned int i = 0; i < n2; i++)
-        {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
     }
     else
     {
-        for(unsigned int i = 0; i < n1; i++)
+        for(unsigned int i = 0; i < n1; i+=100)
         {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
-        
-        for(unsigned int i = 0; i < n2; i++)
-        {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
-        
-        for(unsigned int i = 0; i < n3; i++)
-        {
-            fileData << i*h << " ";
-        }
-        fileData << std::endl;
-    }
-    
-    
-    for(unsigned int i = 0; i < n1; i++)
-    {
-        if(param.sliceX)
-        {
-            i = param.x;
-        }
-        
-        for(unsigned int j = 0; j < n2; j++)
-        {
-            if(param.sliceY)
+            for(unsigned int j = 0; j < n2; j+=100)
             {
-                j = param.y;
-            }
-            
-            for(unsigned int k = 0; k < n3; k++)
-            {
-                if(param.sliceZ)
+                for(unsigned int k = 0; k < n3; k+=100)
                 {
-                    k = param.z;
+                    fileData << vp[i*n2*n3 + j*n3 + k] << " ";
                 }
-                
-                fileData << vp[i*n2*n3 + j*n3 + k] << " ";
-                
-                if(param.sliceZ)
-                {
-                    break;
-                }
+                fileData << std::endl;
             }
-            
-            if(param.sliceY)
-            {
-                break;
-            }
-        }
-        
-        if(param.sliceX)
-        {
-            break;
+            fileData << std::endl;
         }
     }
     
@@ -154,13 +75,13 @@ int main(int argc, char** argv)
     
     //Creation .geo file
     /*
-     *   ^x
+     *   ^z
      *   *
-     *   *    * z
+     *   *    * y
      *   *   *
      *   *  *
      *   * *
-     *   *****************************************> y
+     *   *****************************************> x
      *
      */
     
@@ -170,84 +91,37 @@ int main(int argc, char** argv)
     
     if(param.sliceX)
     {
-        fileGeo << "Point(1) = {" << param.x*h << ", 0, 0, 1.0};" << std::endl;
-        fileGeo << "Point(2) = {" << param.x*h << ", " << n2*h << ", 0, 1.0};" << std::endl;
-        fileGeo << "Point(3) = {" << param.x*h << ", " << n2*h << ", " << n3*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(4) = {" << param.x*h << ", 0, " << n3*h << ", 1.0};" << std::endl;
-    }
-    else if(param.sliceY)
-    {
         fileGeo << "hStep = 500;//Step in meter" << std::endl << std::endl;
         
-        fileGeo << "Point(1) = {0, " << param.y*h << ", 0, 1.0};" << std::endl;
-        fileGeo << "Point(2) = {0, " << param.y*h << ", " << n3*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(3) = {" << n1*h << ", " << param.y*h << ", " << n3*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(4) = {" << n1*h << ", " << param.y*h << ", 0, 1.0};" << std::endl << std::endl;
+        fileGeo << "Point(1) = {" << 0      << ", " << 0     << ", " << 0    << ", 1.0};" << std::endl;
+        fileGeo << "Point(2) = {" << 0      << ", " << -n1*h  << ", " << 0    << ", 1.0};" << std::endl;
+        fileGeo << "Point(3) = {" << n2*h   << ", " << -n1*h  << ", " << 0    << ", 1.0};" << std::endl;
+        fileGeo << "Point(4) = {" << n2*h   << ", " << 0     << ", " << 0    << ", 1.0};" << std::endl << std::endl;
         
-        fileGeo << "Point(5) = {" << n1*h << ", " << param.y*h << ", " << n3*h/2 << ", 1.0};" << std::endl;
-        fileGeo << "Point(6) = {0, " << param.y*h << ", " << n3*h/2 << ", 1.0};" << std::endl;
+        fileGeo << "Point(5) = {" << n2*h/2 << ", " << 0     << ", " << 0    << ", 1.0};" << std::endl;
+        fileGeo << "Point(6) = {" << n2*h/2 << ", " << -n1*h  << ", " << 0 << ", 1.0};" << std::endl;
         
-        fileGeo << "Line(1) = {1, 6};" << std::endl;
-        fileGeo << "Line(2) = {6, 2};" << std::endl;
-        fileGeo << "Line(3) = {2, 3};" << std::endl;
-        fileGeo << "Line(4) = {3, 5};" << std::endl;
-        fileGeo << "Line(5) = {5, 4};" << std::endl;
-        fileGeo << "Line(6) = {4, 1};" << std::endl;
+        fileGeo << "Line(1) = {1, 2};" << std::endl;
+        fileGeo << "Line(2) = {2, 6};" << std::endl;
+        fileGeo << "Line(3) = {6, 3};" << std::endl;
+        fileGeo << "Line(4) = {3, 4};" << std::endl;
+        fileGeo << "Line(5) = {4, 5};" << std::endl;
+        fileGeo << "Line(6) = {5, 1};" << std::endl;
         fileGeo << "Line(7) = {5, 6};" << std::endl << std::endl;
         
-        fileGeo << "Line Loop(8) = {2, 3, 4, 7};" << std::endl;
+        fileGeo << "Line Loop(8) = {1, 2, -7, 6};" << std::endl;
         fileGeo << "Plane Surface(9) = {8};" << std::endl;
-        fileGeo << "Line Loop(10) = {1, -7, 5, 6};" << std::endl;
+        fileGeo << "Line Loop(10) = {3, 4, 5, 7};" << std::endl;
         fileGeo << "Plane Surface(11) = {10};" << std::endl  << std::endl;
-
-        fileGeo << "Physical Point(SOURCE) = {5};" << std::endl;
-        fileGeo << "Physical Line(TOP) = {5, 4};" << std::endl;
-        fileGeo << "Physical Line(BOTTOM) = {1, 2};" << std::endl;
-        fileGeo << "Physical Line(BORDER) = {6, 3};" << std::endl;
-        fileGeo << "Physical Surface(GROUND) = {9, 11};" << std::endl << std::endl;
-
-        fileGeo << "//To modify!!!!!" << std::endl;
-        fileGeo << "Transfinite Line {1, 2, 5, 4} = 6760/hStep+1 Using Progression 1;" << std::endl;
-        fileGeo << "Transfinite Line {6, 7, 3} = 4200/hStep+1 Using Progression 1;" << std::endl << std::endl;
-
-        fileGeo << "Transfinite Surface {9};" << std::endl;
-        fileGeo << "Transfinite Surface {11};" << std::endl;
-        fileGeo << "Recombine Surface {11, 9};" << std::endl << std::endl;
-    }
-    else if(param.sliceZ)
-    {
-        fileGeo << "hStep = 500;//Step in meter" << std::endl << std::endl;
-        
-        fileGeo << "Point(1) = {0, 0, " << param.z*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(2) = {0, " << n2*h << ", " << param.z*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(3) = {" << n1*h << ", " << n2*h << ", " << param.z*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(4) = {" << n1*h << ", 0, " << param.z*h << ", 1.0};" << std::endl << std::endl;
-        
-        fileGeo << "Point(5) = {" << n1*h << ", " << n2*h/2 << ", " << param.z*h << ", 1.0};" << std::endl;
-        fileGeo << "Point(6) = {0, " << n2*h/2 << ", " << param.z*h << ", 1.0};" << std::endl;
-        
-        fileGeo << "Line(1) = {1, 6};" << std::endl;
-        fileGeo << "Line(2) = {6, 2};" << std::endl;
-        fileGeo << "Line(3) = {2, 3};" << std::endl;
-        fileGeo << "Line(4) = {3, 5};" << std::endl;
-        fileGeo << "Line(5) = {5, 4};" << std::endl;
-        fileGeo << "Line(6) = {4, 1};" << std::endl;
-        fileGeo << "Line(7) = {5, 6};" << std::endl << std::endl;
-        
-        fileGeo << "Line Loop(8) = {2, 3, 4, 7};" << std::endl;
-        fileGeo << "Plane Surface(9) = {-8};" << std::endl;
-        fileGeo << "Line Loop(10) = {1, -7, 5, 6};" << std::endl;
-        fileGeo << "Plane Surface(11) = {-10};" << std::endl  << std::endl;
         
         fileGeo << "Physical Point(SOURCE) = {5};" << std::endl;
-        fileGeo << "Physical Line(TOP) = {5, 4};" << std::endl;
-        fileGeo << "Physical Line(BOTTOM) = {1, 2};" << std::endl;
-        fileGeo << "Physical Line(BORDER) = {6, 3};" << std::endl;
+        fileGeo << "Physical Line(TOP) = {3, 4};" << std::endl;
+        fileGeo << "Physical Line(BOTTOM) = {5, 6};" << std::endl;
+        fileGeo << "Physical Line(BORDER) = {1, 4};" << std::endl;
         fileGeo << "Physical Surface(GROUND) = {9, 11};" << std::endl << std::endl;
         
-        fileGeo << "//To modify!!!!!" << std::endl;
-        fileGeo << "Transfinite Line {1, 2, 5, 4} = 6760/hStep+1 Using Progression 1;" << std::endl;
-        fileGeo << "Transfinite Line {6, 7, 3} = 4200/hStep+1 Using Progression 1;" << std::endl << std::endl;
+        fileGeo << "Transfinite Line {2, 3, 5, 6} = 6760/hStep+1 Using Progression 1;" << std::endl;
+        fileGeo << "Transfinite Line {1, 4, 7} = 4200/hStep+1 Using Progression 1;" << std::endl << std::endl;
         
         fileGeo << "Transfinite Surface {9};" << std::endl;
         fileGeo << "Transfinite Surface {11};" << std::endl;
