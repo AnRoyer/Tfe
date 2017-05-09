@@ -20,7 +20,7 @@ void SEQ::writeModels(std::vector<GModel*> &models)
         str += std::to_string(i);
         str += ".msh";
         
-        models[i]->writeMSH(str.c_str());
+        models[i]->writeMSH(str.c_str());//, 3.0);
     }
 }
 

@@ -10,11 +10,6 @@ ANALYSIS = {0, Name "Input/00Type of analysis", ReadOnly 1,
 // wavenumber
 // WAVENUMBER = {2*Pi*15, Name "Input/0Wavenumber"},
 FREQ = {7, Name "Input/0Frequency"},
-// LAMBDA = {2*Pi/WAVENUMBER, Name "Input/1Wavelength", ReadOnly 1},
-// number of points per wavelength
-N_LAMBDA = {20, Name "Input/2Points per wavelength"},
-// number of subdmains in the DDM
-N_DOM = {16, Name "Input/04Number of subdomains"},
 // base msh filename
 MSH_BASE_NAME = "mesh_",
 // directory for output files
@@ -44,9 +39,7 @@ DefineConstant[ // allows to set these from outside
       2="SGS"}},
   ListOfCuts() = { {0, N_DOM-1} },
   N_ON_TOP = {1, Name "Input/01Neumann condition on top",
-	      Choices{0,1}},
-  EXTERNAL_VELOCITY_FIELD = {1, Name "Input/01Velocity Field",
-			     Choices {0="Homogeneous", 1="Marmousi"}}
+	      Choices{0,1}}
 ];
 
 DELTA_SOURCE = 1; // 1 ? delta function : dirichlet

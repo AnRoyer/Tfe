@@ -74,7 +74,8 @@ int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, b
     
     //Create partition edges
     std::cout << "\tCreate partition edges... " << std::flush;
-    if (meshDim > 1)
+    //if (meshDim > 1)
+    if (meshDim >= 2)
     {
         if (meshDim == 2)
         {
@@ -155,23 +156,6 @@ int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, b
     }
     std::cout << "Done!" << std::endl;
     
-    /*
-     // create vertex-based ghost cells (i.e., elements that touch the
-     // partition boundaries by at least one vertex)
-     if(createGhostCells){
-     std::multimap<MElement*, short> &ghosts(model->getGhostCells());
-     ghosts.clear();
-     if(meshDim == 2 || createAllDims)
-     for(std::set<partitionEdge*, Less_partitionEdge>::iterator it = pedges.begin();
-     it != pedges.end(); it++)
-     addGhostCells(*it, vertexToElement, ghosts);
-     if(meshDim == 3)
-     for(std::set<partitionFace*, Less_partitionFace>::iterator it = pfaces.begin();
-     it != pfaces.end(); it++)
-     addGhostCells(*it, vertexToElement, ghosts);
-     }
-     */
-    
     return 1;
 }
 
@@ -183,8 +167,7 @@ void SEQ::fillit_(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, 
         MElement *el = *IT;
         for(unsigned int j = 0; j < el->getNumFaces(); j++)
         {
-            const MFace e = el->getFace(j);
-            faceToElement[e].push_back(el);
+            faceToElement[el->getFace(j)].push_back(el);
         }
     }
 }
@@ -197,8 +180,7 @@ void SEQ::fillit_(std::unordered_map<MEdge, std::vector<MElement*> , Hash_Edge, 
         MElement *el = *IT;
         for(unsigned int j = 0; j < el->getNumEdges(); j++)
         {
-            const MEdge e = el->getEdge(j);
-            edgeToElement[e].push_back(el);
+            edgeToElement[el->getEdge(j)].push_back(el);
         }
     }
 }
@@ -211,8 +193,7 @@ void SEQ::fillit_(std::unordered_map<MVertex*, std::vector<MElement*> > &vertexT
         MElement *el = *IT;
         for(unsigned int j = 0; j < el->getNumVertices(); j++)
         {
-            MVertex* e = el->getVertex(j);
-            vertexToElement[e].push_back(el);
+            vertexToElement[el->getVertex(j)].push_back(el);
         }
     }
 }
@@ -571,6 +552,7 @@ void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEd
         
         int numEdge = 0;
         int numElm = 0;
+
         for(unsigned int j = 0; j < v.size(); j++)
         {
             if(v[j]->getPartition() == v2[i])

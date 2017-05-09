@@ -207,7 +207,7 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing global mesh... " << std::flush;
-    global->writeMSH("global.msh");
+    global->writeMSH("global.msh", 3.0);
     std::cout << "Done!" << std::endl;
     
     std::cout << "Writing .pro file... " << std::flush;
@@ -223,6 +223,10 @@ int main(int argc, char **argv)
     temps = (float)(t2-t1)/CLOCKS_PER_SEC;
     
     std::cout << "-> Partition done in " << temps << "seconds" << std::endl;
+    
+    std::ofstream time("time.txt", std::ofstream::app);
+    time << temps << std::endl;
+    time.close();
 #endif
     
     return 0;

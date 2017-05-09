@@ -74,4 +74,4 @@ Physical Surface("Surface") = {16, 18, 24, 20, 22, 14};
 //+
 Physical Volume("Volume") = {26};
 //+
-Transfinite Line {5, 8, 7, 6, 9, 1, 10, 4, 12, 11, 2, 3} = 11 Using Progression 1;
+Transfinite Line {5, 8, 7, 6, 9, 1, 10, 4, 12, 11, 2, 3} = 4 Using Progression 1;
