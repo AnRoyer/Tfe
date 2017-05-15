@@ -13,7 +13,7 @@
 #include "MEdgeHash.h"
 
 namespace SEQ {
-    int createPartitionBoundaries(GModel *model, std::vector<GModel*> models, bool createGhostCells);
+    int createPartitionBoundaries(GModel *model, std::vector<GModel*> models);
     
     template <class ITERATOR>
     void fillit_(std::unordered_map<MFace, std::vector<MElement*> , Hash_Face, Equal_Face> &faceToElement, ITERATOR it_beg, ITERATOR it_end);

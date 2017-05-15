@@ -160,8 +160,7 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
     if(myPart.size() != 0)
     {
         if(myrank == 0) std::cout << "Creating new GModel... " << std::flush;
-        GModel* global = nullptr;
-        if(myrank == 0) global = new GModel();
+        GModel* global = new GModel();
         std::vector<GModel*> models = createNewModels(m, global, nparts, myPart);
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
@@ -174,27 +173,21 @@ int main_mpi(int nbproc, int myrank, std::string path, int nparts)
         if(myrank == 0) std::cout << "Done!" << std::endl;
             
         if(myrank == 0) std::cout << "Creating new elements... " << std::endl;
-        if(myrank == 0) createPartitionBoundaries(global, false);
-        if(myrank != 0) createPartitionBoundaries(m, false);
+        SEQ::createPartitionBoundaries(global, models);
         if(myrank == 0) std::cout << "Done!" << std::endl;
-            
-        if(myrank == 0) std::cout << "Assign partition boundary to global model... " << std::flush;
-        if(myrank == 0) assignPartitionBoundariesToModels(global, models, myPart);
-        if(myrank != 0) assignPartitionBoundariesToModels(m, models, myPart);
-        if(myrank == 0) std::cout << "Done!" << std::endl;
-            
+        
         if(myrank == 0) std::cout << "Writing partition meshes... " << std::flush;
         SEQ::writeModels(models);
         if(myrank == 0) std::cout << "Done!" << std::endl;
         
         if(myrank == 0) std::cout << "Writing global mesh... " << std::flush;
-        if(myrank == 0) global->writeMSH("global.msh");
+        if(myrank == 0) global->writeMSH("global.msh", 3.0);
         if(myrank == 0) std::cout << "Done!" << std::endl;
         
         if(myrank == 0) std::cout << "Writing .pro file... " << std::flush;
         if(myrank == 0) SEQ::writeProFile(global, nparts);
         if(myrank == 0) std::cout << "Done!" << std::endl;
-            
+        
         SEQ::freeModels(models, global);
     }
     else

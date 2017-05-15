@@ -195,12 +195,8 @@ int main(int argc, char **argv)
     std::cout << "Done!" << std::endl;
     
     std::cout << "Creating new elements... " << std::endl;
-    createPartitionBoundaries(global, models, false);
+    createPartitionBoundaries(global, models);
     std::cout << "Done!" << std::endl;
-    
-    /*std::cout << "Assign partition boundary to global model... " << std::flush;
-    assignPartitionBoundariesToModels(global, models);
-    std::cout << "Done!" << std::endl;*/
     
     std::cout << "Writing partition meshes... " << std::flush;
     writeModels(models);

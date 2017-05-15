@@ -31,7 +31,7 @@
 
 #include "topology.h"
 
-int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, bool createGhostCells)
+int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models)
 {
     unsigned int numElem[6];
     const int meshDim = model->getNumMeshElements(numElem);
@@ -74,7 +74,6 @@ int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, b
     
     //Create partition edges
     std::cout << "\tCreate partition edges... " << std::flush;
-    //if (meshDim > 1)
     if (meshDim >= 2)
     {
         if (meshDim == 2)
@@ -156,7 +155,7 @@ int SEQ::createPartitionBoundaries(GModel *model, std::vector<GModel*> models, b
     }
     std::cout << "Done!" << std::endl;
     
-    return 1;
+    return 0;
 }
 
 template <class ITERATOR>

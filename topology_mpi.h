@@ -14,10 +14,8 @@
 
 namespace PAR {
     std::vector<GModel*> createNewModels(GModel *gModel, GModel *global, int nparts, std::vector<int> myPart);
-    int getPos(std::vector<int> myPart, int partition);
     void addPhysical(GModel *newModel, GEntity *newEntity, GModel *oldModel, GEntity *oldEntity, int partition, int maxDim);
-    void assignPartitionBoundariesToModels(GModel *gModel, std::vector<GModel*> &models, std::vector<int> myPart);
-    int createPartitionBoundaries(GModel *model, bool createGhostCells);
+    int getPos(std::vector<int> myPart, int partition);
 }
 
 #endif //TOPOLOGY_MPI_INCLUDED
