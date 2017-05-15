@@ -148,12 +148,6 @@ int main(int argc, char** argv)
         fileGeo << "Physical Line(BORDER) = {1, 4};" << std::endl;
         fileGeo << "Physical Surface(GROUND) = {9, 11};" << std::endl << std::endl;
         
-        fileGeo << "Physical Point(SOURCE) = {5};" << std::endl;
-        fileGeo << "Physical Line(TOP) = {3, 4};" << std::endl;
-        fileGeo << "Physical Line(BOTTOM) = {5, 6};" << std::endl;
-        fileGeo << "Physical Line(BORDER) = {1, 4};" << std::endl;
-        fileGeo << "Physical Surface(GROUND) = {9, 11};" << std::endl << std::endl;
-        
         fileGeo << "Transfinite Line {2, 3, 5, 6} = 6760/hStep+1 Using Progression 1;" << std::endl;
         fileGeo << "Transfinite Line {1, 4, 7} = 4200/hStep+1 Using Progression 1;" << std::endl << std::endl;
         

@@ -227,7 +227,7 @@ void SEQ::assignPartitionBoundary(GModel *model, MFace &me, std::set<partitionFa
         return;
     }
     
-    const int numPhysical = model->numPhysicalNames()+1;
+    const int numPhysical = model->getMaxPhysicalNumber(-1)+1;
     
     partitionFace pf(model, 1, v2);
     std::set<partitionFace*, Less_partitionFace>::iterator it = pfaces.find(&pf);
@@ -450,7 +450,7 @@ void SEQ::assignPartitionBoundary(GModel *model, MEdge &me, std::set<partitionEd
         return;
     }
     
-    const int numPhysical = model->numPhysicalNames()+1;
+    const int numPhysical = model->getMaxPhysicalNumber(-1)+1;
     
     partitionEdge pe(model, 1, nullptr, nullptr, v2);
     std::set<partitionEdge*, Less_partitionEdge>::iterator it = pedges.find(&pe);
@@ -639,7 +639,7 @@ void SEQ::assignPartitionBoundary(GModel *model, MVertex *ve, std::set<partition
         return;
     }
 
-    const int numPhysical = model->numPhysicalNames()+1;
+    const int numPhysical = model->getMaxPhysicalNumber(-1)+1;
     
     partitionVertex pv(model, 1, v2);
     std::set<partitionVertex*, Less_partitionVertex>::iterator it = pvertices.find(&pv);
