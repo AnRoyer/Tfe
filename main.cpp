@@ -78,6 +78,10 @@ int main(int argc, char **argv)
         float temps = (float)(t2-t1)/CLOCKS_PER_SEC;
         
         std::cout << "-> Partition done in " << temps << "seconds" << std::endl;
+        
+        std::ofstream time("time.txt", std::ofstream::app);
+        time << temps << std::endl;
+        time.close();
     }
     MPI_Finalize();
 #else

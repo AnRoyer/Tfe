@@ -44,7 +44,7 @@ endif(APPLE)
 
 if(MPI)
 	add_executable(meshPartitioner_mpi ${FILES} ${FILESMPI})
-	target_link_libraries(meshPartitioner_mpi Gmsh lapack blas metis parmetis)
+	target_link_libraries(meshPartitioner_mpi Gmsh lapack blas parmetis metis)
 else(MPI)
 	add_executable(meshPartitioner ${FILES})
 	target_link_libraries(meshPartitioner Gmsh lapack blas metis)
